@@ -340,6 +340,14 @@ function generateYorum(kko,baskin){
   const p1Key=baskin.k+'-'+ikinci.k;
   const p1=p1Map[p1Key]||`${baskin.name} kariyer eğilimin öne çıkıyor. ${ikinci.name} boyutun da güçlü — bu iki boyut kariyer anlayışını birlikte şekillendiriyor.`;
 
+  // Boyut açıklaması + motivasyon
+  const boyutAciklama={
+    'G':'Geçişken kariyer kalıbı, farklı alanlarda deneyim edinmeyi, yeni başlangıçlara açık olmayı ve kariyer yolculuğunda esnekliği ön planda tutan bir anlayışı ifade eder. Bu kalıba sahip kişiler tek bir çizgide ilerlemek yerine çeşitlilikten beslenir. Ana motivasyon kaynağı: yeni deneyimler, farklı ortamlar ve özgürce hareket edebilmek.',
+    'S':'Sarmal kariyer kalıbı, mesleki büyümeyi, derinleşmeyi ve her deneyimi bir sonrakinin üstüne inşa etmeyi temel alan bir anlayışı ifade eder. Bu kalıba sahip kişiler hem öğrenmeyi hem de biriktirdiklerini anlamlı bir bütüne dönüştürmeyi önemser. Ana motivasyon kaynağı: öğrenmek, büyümek ve birikimini anlamlı bir yere taşımak.',
+    'U':'Uzman kariyer kalıbı, tek bir alanda derinleşmeyi, istikrarı ve uzun vadeli ustalaşmayı temel alan bir anlayışı ifade eder. Bu kalıba sahip kişiler aynı alanda yıllar geçirerek gerçek bir otorite olmayı hedefler. Ana motivasyon kaynağı: seçtiği alanda bilgi ve uzmanlık derinliği kazanmak, o alanın gerçek bir uzmanı olmak.',
+    'D':'Doğrusal kariyer kalıbı, hiyerarşik yükselmeyi, sorumluluk ve statü kazanımını temel alan bir anlayışı ifade eder. Bu kalıba sahip kişiler kariyer başarısını kurumsal basamaklarda ilerlemekle ölçer. Ana motivasyon kaynağı: yükselmek, sorumluluk almak ve kariyer başarısını somut olarak görmek.'
+  }[baskin.k];
+
   // Güçlü yön + öneri
   const gucluMap={
     'G':rand(["Güçlü yönün: belirsizlikle barışık olmak ve değişime hızlı uyum sağlamak. Dikkat noktası: aşırı esneklik bazen derinleşmeyi zorlaştırabilir. Öneri: Kariyer yolculuğunda pusula olacak 2-3 temel değerini netleştir.","Güçlü yönün: farklı ortamlara hızla uyum sağlamak ve yeni başlangıçlara açık olmak. Dikkat noktası: çok fazla seçenek arasında kalmak bazen seni köksüzleştirebilir. Öneri: Neyin peşinde olduğunu bilmek esnekliğini daha etkili kullanmana yardımcı olur."]),
@@ -361,7 +369,7 @@ function generateYorum(kko,baskin){
   if(stenD<=2&&baskin.k!=='D') dusuklar.push(rand(["Hiyerarşik yükselme ve statü kazanımı senin için temel motivasyon kaynağı değil. İşin içeriği, anlamı veya özerklik çok daha belirleyici.","Kariyer başarısını unvan veya statüyle ölçmüyorsun. Pozisyon odaklı bir çevre sende tatminsizlik yaratma riski taşıyor.","Doğrusal yükselme beklentisi olan ortamlar seni baskı altında bırakabilir. Kariyer motivasyonun çok daha içsel kaynaklardan besleniyor."]));
 
   const dusukMetin=dusuklar.length>0?dusuklar.join(' ')+'\n\n':'';
-  return `${p1}\n\n${dusukMetin}${gucluMap}`;
+  return `${boyutAciklama}\n\n${p1}\n\n${dusukMetin}${gucluMap}`;
 }
 
 async function saveData(kko,baskinKKO,yorum){

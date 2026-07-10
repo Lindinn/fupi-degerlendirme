@@ -547,6 +547,14 @@ function generateInterpretation(kko,fc,baskinKKO,baskinDriver){
   const secilenler={};
   FC_ALL.forEach(item=>{secilenler[item.no]=fcAns[item.no];});
 
+  // Boyut açıklaması + motivasyon
+  const boyutAciklama={
+    'G':'Geçişken kariyer kalıbı, farklı alanlarda deneyim edinmeyi, yeni başlangıçlara açık olmayı ve kariyer yolculuğunda esnekliği ön planda tutan bir anlayışı ifade eder. Bu kalıba sahip kişiler tek bir çizgide ilerlemek yerine çeşitlilikten beslenir. Ana motivasyon kaynağı: yeni deneyimler, farklı ortamlar ve özgürce hareket edebilmek.',
+    'S':'Sarmal kariyer kalıbı, mesleki büyümeyi, derinleşmeyi ve her deneyimi bir sonrakinin üstüne inşa etmeyi temel alan bir anlayışı ifade eder. Bu kalıba sahip kişiler hem öğrenmeyi hem de biriktirdiklerini anlamlı bir bütüne dönüştürmeyi önemser. Ana motivasyon kaynağı: öğrenmek, büyümek ve birikimini anlamlı bir yere taşımak.',
+    'U':'Uzman kariyer kalıbı, tek bir alanda derinleşmeyi, istikrarı ve uzun vadeli ustalaşmayı temel alan bir anlayışı ifade eder. Bu kalıba sahip kişiler aynı alanda yıllar geçirerek gerçek bir uzman olmayı hedefler. Ana motivasyon kaynağı: seçtiği alanda bilgi ve uzmanlık derinliği kazanmak, o alanın gerçek bir uzmanı olmak.',
+    'D':'Doğrusal kariyer kalıbı, hiyerarşik yükselmeyi, sorumluluk ve statü kazanımını temel alan bir anlayışı ifade eder. Bu kalıba sahip kişiler kariyer başarısını kurumsal basamaklarda ilerlemekle ölçer. Ana motivasyon kaynağı: yükselmek, sorumluluk almak ve kariyer başarısını somut olarak görmek.'
+  }[baskinKKO.k];
+
   // Durumsal sorulardan kişiye özel cümleler
   const durumsal=[];
 
@@ -682,7 +690,7 @@ function generateInterpretation(kko,fc,baskinKKO,baskinDriver){
 
   const dusukMetin = dusukYorumlar.length > 0 ? dusukYorumlar.join(' ') : '';
 
-  return `${p1}\n\n${p2}\n\n${p3 ? p3+'\n\n' : ''}${dusukMetin ? dusukMetin+'\n\n' : ''}${gucluMap}\n\n${oneri}`;
+  return `${boyutAciklama}\n\n${p1}\n\n${p2}\n\n${p3 ? p3+'\n\n' : ''}${dusukMetin ? dusukMetin+'\n\n' : ''}${gucluMap}\n\n${oneri}`;
 }
 
 async function saveData(kko,fc,baskinKKO,baskinDriver,yorum){

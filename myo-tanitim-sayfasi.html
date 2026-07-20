@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="tr"><!-- KAMPANYA VERSİYONU — 20 Temmuz sabahı yüklenir, kampanya bitiminde normal versiyona dönülür -->
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -38,6 +38,41 @@ body {
   font-size: 16px;
   line-height: 1.7;
   -webkit-font-smoothing: antialiased;
+}
+
+/* KAMPANYA BANDI */
+.kampanya-band {
+  background: var(--c-primary);
+  color: var(--c-light);
+  text-align: center;
+  padding: 10px clamp(1rem, 4vw, 2rem);
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+.kampanya-band a {
+  color: #FFFFFF;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  font-weight: 600;
+}
+.kampanya-band .band-detay {
+  color: rgba(238,237,254,0.7);
+  font-weight: 400;
+}
+.price-old {
+  text-decoration: line-through;
+  color: var(--c-muted);
+  font-size: 0.72em;
+  font-weight: 400;
+  margin-right: 8px;
+}
+.price-destek {
+  display: block;
+  font-size: 12.5px;
+  color: var(--c-medium);
+  font-weight: 500;
+  margin-top: 2px;
 }
 
 /* NAV */
@@ -455,6 +490,10 @@ footer a { color: rgba(255,255,255,0.5); }
 <body>
 
 <!-- NAV -->
+<div class="kampanya-band">
+  Tercih Dönemi Desteği — tüm MYO paketlerinde %20 · <a href="#fiyatlandirma">Paketleri gör</a> <span class="band-detay">· Tercih dönemi boyunca geçerli</span>
+</div>
+
 <nav>
   <div class="nav-inner">
     <a href="/" class="nav-logo">FUPİ <span>Kariyer Tasarımı</span></a>
@@ -706,7 +745,7 @@ footer a { color: rgba(255,255,255,0.5); }
 
       <div class="price-card">
         <div class="price-name">Rapor 1 · Standart</div>
-        <div class="price-value">1.500 TL <span>(KDV Dahil)</span></div>
+        <div class="price-value"><span class="price-old">1.500 TL</span>1.200 TL <span>(KDV Dahil)</span><span class="price-destek">Tercih dönemi desteği · %20</span></div>
         <p class="price-tagline">Kendini tanımaya hızlı ve bilimsel bir başlangıç.</p>
         <ul class="price-features">
           <li>65 maddelik bilimsel değerlendirme (10–15 dk)</li>
@@ -720,7 +759,7 @@ footer a { color: rgba(255,255,255,0.5); }
       <div class="price-card featured">
         <div class="price-badge">Önerilen</div>
         <div class="price-name">Rapor 2 · Kişiselleştirilmiş</div>
-        <div class="price-value">4.800 TL <span>(KDV Dahil)</span></div>
+        <div class="price-value"><span class="price-old">4.800 TL</span>3.840 TL <span>(KDV Dahil)</span><span class="price-destek">Tercih dönemi desteği · %20</span></div>
         <p class="price-tagline">Seni tanıyan bir görüşmeyle şekillenen, sana özel bir profil.</p>
         <ul class="price-features">
           <li>~30 dakika FUPİ danışmanıyla ön görüşme</li>
@@ -733,7 +772,7 @@ footer a { color: rgba(255,255,255,0.5); }
 
       <div class="price-card">
         <div class="price-name">Rapor 3 · Profil + Kariyer Tasarımı</div>
-        <div class="price-value">7.200 TL <span>(KDV Dahil)</span></div>
+        <div class="price-value"><span class="price-old">7.200 TL</span>5.760 TL <span>(KDV Dahil)</span><span class="price-destek">Tercih dönemi desteği · %20</span></div>
         <p class="price-tagline">Profilinden somut bir kariyer planına.</p>
         <ul class="price-features">
           <li>~30 dakika ön görüşme</li>

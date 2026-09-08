@@ -27,25 +27,13 @@
     min-height: 100vh;
   }
 
-  /* HEADER */
-  .header {
-    background: var(--primary);
-    padding: 1.5rem 2rem;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-  }
-  .header-logo { height: 36px; width: auto; }
-  .header-title {
-    color: rgba(255,255,255,0.9);
-    font-size: 15px;
-    font-weight: 500;
-    letter-spacing: 0.01em;
-  }
-  .header-sub {
-    color: rgba(255,255,255,0.5);
-    font-size: 12px;
-    margin-top: 2px;
+  /* ALT BİLGİ */
+  .footer-note {
+    text-align: center;
+    font-size: 11px;
+    color: var(--faint);
+    margin-top: 1.25rem;
+    letter-spacing: 0.02em;
   }
 
   /* SCREENS */
@@ -133,6 +121,60 @@
     color: #c0392b;
     margin-top: 0.5rem;
     display: none;
+  }
+
+  /* ONAY KUTUSU */
+  .onay-section {
+    margin-top: 1.5rem;
+    background: var(--bg);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 0.9rem 1rem;
+    transition: border-color 0.2s;
+  }
+  .onay-section.hata { border-color: #e74c3c; }
+  .onay-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.7rem;
+    cursor: pointer;
+  }
+  .onay-row input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    min-width: 20px;
+    margin-top: 2px;
+    border: 2px solid var(--faint);
+    border-radius: 5px;
+    background: #fff;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.15s;
+  }
+  .onay-row input[type="checkbox"]:checked {
+    background: var(--primary-mid);
+    border-color: var(--primary-mid);
+  }
+  .onay-row input[type="checkbox"]:checked::after {
+    content: '✓';
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -52%);
+  }
+  .onay-text {
+    font-size: 12.5px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+  .onay-text strong {
+    color: var(--text);
+    font-weight: 500;
   }
 
   /* FORM */
@@ -336,14 +378,6 @@
 </head>
 <body>
 
-<div class="header">
-  <img class="header-logo" src="https://lindinn.github.io/fupi-degerlendirme/fupi_logo.png" alt="FUPİ">
-  <div>
-    <div class="header-title">Mesleki Yönelim Ölçeği</div>
-    <div class="header-sub">MYO © FUPİ Kariyer Tasarımı</div>
-  </div>
-</div>
-
 <!-- GİRİŞ EKRANI -->
 <div id="screen-intro" class="screen active">
   <div class="intro-wrap">
@@ -360,8 +394,24 @@
         <input class="name-input" type="text" id="input-adsoyad" placeholder="Adınız Soyadınız" style="width:100%">
         <div class="input-error" id="name-error">Lütfen adınızı ve soyadınızı girin.</div>
       </div>
+
+      <div class="name-section" style="margin-top:1.25rem">
+        <label>E-posta Adresiniz</label>
+        <input class="name-input" type="email" id="input-eposta" placeholder="ornek@eposta.com" style="width:100%" autocomplete="email">
+        <div class="input-error" id="eposta-error">Lütfen geçerli bir e-posta adresi girin.</div>
+      </div>
+
+      <div class="onay-section" id="onay-section">
+        <label class="onay-row" for="input-onay">
+          <input type="checkbox" id="input-onay">
+          <span class="onay-text">Bilgileriniz sadece size rapor düzenlemek için kullanılacaktır. Kişisel verileriniz gizlilik ilkesi ile korunur ve üçüncü taraflarla paylaşılmaz. <strong>Okudum, onaylıyorum.</strong></span>
+        </label>
+        <div class="input-error" id="onay-error">Devam etmek için onay kutusunu işaretleyin.</div>
+      </div>
+
       <button class="btn-start" onclick="startForm()">Başla →</button>
     </div>
+    <div class="footer-note">MYO © FUPİ Kariyer Tasarımı</div>
   </div>
 </div>
 
@@ -819,15 +869,51 @@ const BOYUT_LABELS = {
 };
 
 let katilimciAd = '';
+let katilimciEposta = '';
+
+document.addEventListener('DOMContentLoaded', function () {
+  document.getElementById('input-onay').addEventListener('change', function () {
+    if (this.checked) {
+      document.getElementById('onay-error').style.display = 'none';
+      document.getElementById('onay-section').classList.remove('hata');
+    }
+  });
+});
 
 function startForm() {
   const adsoyad = document.getElementById('input-adsoyad').value.trim();
+  const eposta = document.getElementById('input-eposta').value.trim();
+  const onay = document.getElementById('input-onay').checked;
+  let hata = false;
+
   if (!adsoyad) {
     document.getElementById('name-error').style.display = 'block';
-    return;
+    hata = true;
+  } else {
+    document.getElementById('name-error').style.display = 'none';
   }
+
+  const epostaGecerli = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(eposta);
+  if (!epostaGecerli) {
+    document.getElementById('eposta-error').style.display = 'block';
+    hata = true;
+  } else {
+    document.getElementById('eposta-error').style.display = 'none';
+  }
+
+  if (!onay) {
+    document.getElementById('onay-error').style.display = 'block';
+    document.getElementById('onay-section').classList.add('hata');
+    hata = true;
+  } else {
+    document.getElementById('onay-error').style.display = 'none';
+    document.getElementById('onay-section').classList.remove('hata');
+  }
+
+  if (hata) return;
+
   katilimciAd = adsoyad;
-  document.getElementById('name-error').style.display = 'none';
+  katilimciEposta = eposta;
   buildForm();
   showScreen('screen-form');
 }
@@ -937,6 +1023,8 @@ async function submitForm() {
   const payload = {
     tarih: new Date().toLocaleString('tr-TR'),
     ad_soyad: katilimciAd,
+    eposta: katilimciEposta,
+    onay: 'Evet',
     ...yanıtlar,
     ...Object.fromEntries(Object.entries(boyut_ort).map(([b, v]) => [b + '_ort', v])),
     en_yuksek_3: sirali.join(' | ')

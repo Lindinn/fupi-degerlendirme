@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MYO Webhook Testi</title>
+<style>
+  body {
+    font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+    background: #f8f7ff;
+    color: #1a1830;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 1.5rem;
+  }
+  .card {
+    background: #fff;
+    border: 1px solid #e8e5f5;
+    border-radius: 14px;
+    padding: 2rem;
+    max-width: 460px;
+    width: 100%;
+  }
+  h1 { font-size: 18px; color: #3C3489; margin: 0 0 0.5rem; }
+  p { font-size: 14px; color: #6b648f; line-height: 1.65; margin: 0 0 1.25rem; }
+  button {
+    background: #3C3489;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 0.8rem 1.5rem;
+    font-size: 15px;
+    font-family: inherit;
+    cursor: pointer;
+    width: 100%;
+  }
+  button:disabled { opacity: 0.5; cursor: not-allowed; }
+  .sonuc {
+    margin-top: 1.25rem;
+    font-size: 13px;
+    line-height: 1.6;
+    padding: 0.9rem 1rem;
+    border-radius: 8px;
+    display: none;
+  }
+  .ok { background: #e8f7ef; border: 1px solid #2e9e6b; color: #1c6b47; }
+  .hata { background: #fdecea; border: 1px solid #e74c3c; color: #a5281b; }
+  code {
+    background: #f0eefb;
+    padding: 1px 5px;
+    border-radius: 4px;
+    font-size: 12px;
+  }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <h1>MYO Webhook Testi</h1>
+  <p>Bu sayfa Google Sheets'e tek bir test satırı gönderir. Butona bastıktan sonra MYO sheet'ini aç ve en alta bak.</p>
+  <button id="btn" onclick="testGonder()">Test satırı gönder</button>
+  <div class="sonuc" id="sonuc"></div>
+</div>
+
+<script>
+const WEBHOOK = 'https://script.google.com/macros/s/AKfycbwgavSv0pI0SdLhxMkVnSD1IuabFZpyyI78s1aMRik-pOHjldYJaDJcnF36MG3Qwymz3A/exec';
+
+async function testGonder() {
+  const btn = document.getElementById('btn');
+  const kutu = document.getElementById('sonuc');
+  btn.disabled = true;
+  btn.textContent = 'Gönderiliyor...';
+
+  const payload = {
+    tarih: new Date().toLocaleString('tr-TR'),
+    ad_soyad: 'CLAUDE-TEST',
+    eposta: 'test@ornek.com',
+    onay: 'Evet',
+    MYT2: 3
+  };
+
+  try {
+    await fetch(WEBHOOK, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify(payload)
+    });
+    kutu.className = 'sonuc ok';
+    kutu.innerHTML = 'İstek gönderildi.<br><br>Şimdi MYO sheet\'ini aç. En altta <code>CLAUDE-TEST</code> satırı ve sonda <code>eposta</code> ile <code>onay</code> sütunları görünüyorsa her şey çalışıyor demektir. Test satırını silmeyi unutma.';
+    kutu.style.display = 'block';
+    btn.textContent = 'Tekrar gönder';
+    btn.disabled = false;
+  } catch (err) {
+    kutu.className = 'sonuc hata';
+    kutu.textContent = 'İstek gönderilemedi: ' + err.message;
+    kutu.style.display = 'block';
+    btn.textContent = 'Tekrar dene';
+    btn.disabled = false;
+  }
+}
+</script>
+</body>
+</html>

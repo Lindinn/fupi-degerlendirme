@@ -50,7 +50,7 @@
   .stat-lbl { font-size: 11px; color: var(--muted); }
 
   .toolbar { display: flex; gap: 10px; margin-bottom: 1.25rem; align-items: center; }
-  .search-input { background: var(--card); border: .5px solid var(--border); border-radius: 8px; padding: .5rem 1rem; font-size: 13px; font-family: "DM Sans", sans-serif; color: var(--text); outline: none; width: 220px; transition: border-color .2s; }
+  .search-input { background: var(--card); border: .5px solid var(--border); border-radius: 8px; padding: .5rem 1rem; font-size: 13px; font-family: "DM Sans", sans-serif; color: var(--text); outline: none; width: 260px; transition: border-color .2s; }
   .search-input:focus { border-color: var(--primary); }
   .search-input::placeholder { color: var(--muted); }
 
@@ -136,7 +136,7 @@
   </div>
 
   <div class="toolbar">
-    <input class="search-input" type="text" id="search-input" placeholder="İsimle ara…" oninput="renderTable()">
+    <input class="search-input" type="text" id="search-input" placeholder="İsim veya e-posta ile ara…" oninput="renderTable()">
   </div>
 
   <div id="table-wrap"><div class="loading-msg">Yükleniyor…</div></div>
@@ -236,9 +236,18 @@ function updateStats() {
   }
 }
 
+function epostaHucresi(deger) {
+  const eposta = (deger || '').trim();
+  if (!eposta) return '<span style="color:var(--faint)">—</span>';
+  return '<a href="mailto:' + eposta + '" style="color:var(--primary);text-decoration:none">' + eposta + '</a>';
+}
+
 function renderTable() {
   const q = (document.getElementById('search-input').value || '').toLowerCase();
-  const filtered = allData.filter(r => (r['ad_soyad']||'').toLowerCase().includes(q));
+  const filtered = allData.filter(r =>
+    (r['ad_soyad']||'').toLowerCase().includes(q) ||
+    (r['eposta']||'').toLowerCase().includes(q)
+  );
   window._filtered = filtered;
 
   if (filtered.length === 0) {
@@ -247,7 +256,7 @@ function renderTable() {
   }
 
   let html = '<table><thead><tr>';
-  html += '<th>#</th><th>Ad Soyad</th><th>Tarih</th><th>En Yüksek 3 Boyut</th><th>1. Boyut Ort.</th><th></th><th></th>';
+  html += '<th>#</th><th>Ad Soyad</th><th>E-posta</th><th>Tarih</th><th>En Yüksek 3 Boyut</th><th>1. Boyut Ort.</th><th></th><th></th>';
   html += '</tr></thead><tbody>';
 
   filtered.forEach((r, i) => {
@@ -257,6 +266,7 @@ function renderTable() {
     html += '<tr>';
     html += '<td style="color:var(--muted);font-size:12px;font-family:monospace">' + (allData.indexOf(r)+1) + '</td>';
     html += '<td style="font-weight:500;color:#fff">' + (r['ad_soyad']||'—') + '</td>';
+    html += '<td style="font-size:12px">' + epostaHucresi(r['eposta']) + '</td>';
     html += '<td style="color:var(--muted);font-size:12px">' + (r['tarih']||'—') + '</td>';
     html += '<td><div class="profil-chips">';
     en_yuksek_3.forEach(b => {
@@ -276,7 +286,9 @@ function renderTable() {
 function openDetail(idx) {
   const r = window._filtered[idx];
   document.getElementById('modal-name').textContent = r['ad_soyad'] || '—';
-  document.getElementById('modal-date').textContent = r['tarih'] || '—';
+  const epostaMetni = (r['eposta'] || '').trim();
+  document.getElementById('modal-date').innerHTML =
+    (r['tarih'] || '—') + (epostaMetni ? ' &nbsp;·&nbsp; ' + epostaHucresi(epostaMetni) : '');
 
   const sirali = BOYUTLAR.slice().sort((a,b) => parseFloat(r[b.key]||0) - parseFloat(r[a.key]||0));
 

@@ -402,7 +402,7 @@ section { padding: clamp(4rem, 8vw, 7rem) clamp(1.5rem, 5vw, 4rem); }
   letter-spacing: 0.08em; text-transform: uppercase; padding: 5px 14px; border-radius: 20px;
   white-space: nowrap;
 }
-.price-name { font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--c-medium); margin-bottom: 0.75rem; }
+.price-name { font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--c-medium); margin-bottom: 1rem; }
 .price-card.featured .price-name { color: rgba(255,255,255,0.6); }
 .price-value { font-family: var(--font-d); font-size: 2.1rem; font-weight: 600; color: var(--c-primary); margin-bottom: 0.25rem; }
 .price-card.featured .price-value { color: white; }
@@ -424,6 +424,7 @@ section { padding: clamp(4rem, 8vw, 7rem) clamp(1.5rem, 5vw, 4rem); }
 .price-card.featured .price-btn { background: var(--c-accent); }
 .price-card.featured .price-btn:hover { background: #C06530; }
 .pricing-note { font-size: 13px; color: var(--c-muted); text-align: center; margin-top: 2rem; }
+.pricing-note a { color: var(--c-primary); }
 
 /* TEKNIK */
 .teknik-bg { background: var(--c-light); }
@@ -499,7 +500,7 @@ footer a { color: rgba(255,255,255,0.5); }
       <a href="#raporlar">Örnek Raporlar</a>
       <a href="#fiyatlandirma">Paketler</a>
       <a href="#teknik">Teknik Bilgi</a>
-      <a href="#fiyatlandirma" class="nav-cta">Ölçeği Al</a>
+      <a href="#fiyatlandirma" class="nav-cta">İletişime Geç</a>
     </div>
   </div>
 </nav>
@@ -514,7 +515,7 @@ footer a { color: rgba(255,255,255,0.5); }
         Mesleki Yönelim Ölçeği (MYO), ilgi veya becerini değil — hangi tür iş içeriğiyle çalışmaktan anlam ve doyum aldığını ölçer. 13 boyutta, sana özgü bir çalışma profili.
       </p>
       <div class="hero-btns">
-        <a href="#fiyatlandirma" class="btn-primary">MYO'yu Uygula</a>
+        <a href="#fiyatlandirma" class="btn-primary">MYO Paketlerini İncele</a>
         <a href="#raporlar" class="btn-ghost">Örnek Raporu İncele</a>
       </div>
     </div>
@@ -721,7 +722,7 @@ footer a { color: rgba(255,255,255,0.5); }
   <div class="section-inner">
     <p class="section-label">Örnek Raporlar</p>
     <h2 class="section-title">Gerçek bir MYO raporu <em>nasıl görünür?</em></h2>
-    <p class="section-desc">Satın almadan önce, hangi rapor formatının seni nasıl bir çıktıyla buluşturacağını incelemek ister misin?</p>
+    <p class="section-desc">Karar vermeden önce, hangi rapor formatının seni nasıl bir çıktıyla buluşturacağını incelemek ister misin?</p>
     <div class="sample-report-btns">
       <a href="myo-ornek-rapor-standart.pdf" class="sample-btn solid" target="_blank" rel="noopener">Standart Rapor Örneği</a>
       <a href="myo-ornek-rapor-kisisellestirilmis-ogrenci.pdf" class="sample-btn outline" target="_blank" rel="noopener">Kişiselleştirilmiş Rapor Örneği (Öğrenci)</a>
@@ -736,12 +737,11 @@ footer a { color: rgba(255,255,255,0.5); }
   <div class="section-inner">
     <p class="section-label">Paketler</p>
     <h2 class="section-title">Sana uygun <em>MYO paketini</em> seç</h2>
-    <p class="section-desc">İster hızlı bir öz-farkındalık, ister görüşmeyle desteklenmiş kişiselleştirilmiş bir profil — sana uygun formatı seç.</p>
+    <p class="section-desc">İster hızlı bir öz-farkındalık, ister görüşmeyle desteklenmiş kişiselleştirilmiş bir profil — sana uygun formatı seç, ayrıntılar için bizimle iletişime geç.</p>
     <div class="pricing-grid">
 
       <div class="price-card">
         <div class="price-name">Rapor 1 · Standart</div>
-        <div class="price-value">1.500 TL <span>(KDV Dahil)</span></div>
         <p class="price-tagline">Kendini tanımaya hızlı ve bilimsel bir başlangıç.</p>
         <ul class="price-features">
           <li>65 maddelik bilimsel değerlendirme (10–15 dk)</li>
@@ -749,13 +749,12 @@ footer a { color: rgba(255,255,255,0.5); }
           <li>13 yönelim alanının ayrıntılı analizi</li>
           <li>Baskın ve gelişime açık alanların net gösterimi</li>
         </ul>
-        <a href="https://www.shopier.com/fupi/48932825" class="price-btn" target="_blank" rel="noopener">Satın Al</a>
+        <a href="mailto:bilgi@fupi.com.tr?subject=MYO%20Rapor%201%20-%20Standart" class="price-btn">Bilgi Al</a>
       </div>
 
       <div class="price-card featured">
         <div class="price-badge">Önerilen</div>
         <div class="price-name">Rapor 2 · Kişiselleştirilmiş</div>
-        <div class="price-value">4.800 TL <span>(KDV Dahil)</span></div>
         <p class="price-tagline">Seni tanıyan bir görüşmeyle şekillenen, sana özel bir profil.</p>
         <ul class="price-features">
           <li>~30 dakika FUPİ danışmanıyla ön görüşme</li>
@@ -763,12 +762,11 @@ footer a { color: rgba(255,255,255,0.5); }
           <li>Bu görüşmeye dayanarak hazırlanan Kişiselleştirilmiş MYO Profil Raporu</li>
           <li>13 yönelim alanının bağlamınla birlikte yorumlanmış analizi</li>
         </ul>
-        <a href="https://www.shopier.com/fupi/48932900" class="price-btn" target="_blank" rel="noopener">Satın Al</a>
+        <a href="mailto:bilgi@fupi.com.tr?subject=MYO%20Rapor%202%20-%20Ki%C5%9Fiselle%C5%9Ftirilmi%C5%9F" class="price-btn">Bilgi Al</a>
       </div>
 
       <div class="price-card">
         <div class="price-name">Rapor 3 · Profil + Kariyer Tasarımı</div>
-        <div class="price-value">7.200 TL <span>(KDV Dahil)</span></div>
         <p class="price-tagline">Profilinden somut bir kariyer planına.</p>
         <ul class="price-features">
           <li>~30 dakika ön görüşme</li>
@@ -776,11 +774,11 @@ footer a { color: rgba(255,255,255,0.5); }
           <li>30 dakikalık ayrı Kariyer Tasarımı görüşmesi</li>
           <li>Profiline özel somut kariyer ve gelişim önerileri</li>
         </ul>
-        <a href="https://www.shopier.com/fupi/48933026" class="price-btn" target="_blank" rel="noopener">Satın Al</a>
+        <a href="mailto:bilgi@fupi.com.tr?subject=MYO%20Rapor%203%20-%20Profil%20%2B%20Kariyer%20Tasar%C4%B1m%C4%B1" class="price-btn">Bilgi Al</a>
       </div>
 
     </div>
-    <p class="pricing-note">Satın alma sonrası form linki e-posta adresinize gönderilir. Form tamamlandıktan sonra raporunuz 24 saat içinde iletilir.</p>
+    <p class="pricing-note">Paket detayları ve güncel koşullar için <a href="mailto:bilgi@fupi.com.tr">bilgi@fupi.com.tr</a> adresinden bize ulaşın. Süreç başladıktan sonra form linki e-posta adresinize gönderilir, form tamamlandıktan sonra raporunuz 24 saat içinde iletilir.</p>
   </div>
 </section>
 
@@ -856,7 +854,7 @@ footer a { color: rgba(255,255,255,0.5); }
     <h2 class="cta-title">Kendi profilini <em>keşfetmeye</em> hazır mısın?</h2>
     <p class="cta-desc">MYO, sana bir meslek dikte etmez. Hangi iş içerikleriyle çalışırken kendin olduğunu görmene yardımcı olur. Oradan sonrası seninle birlikte şekillenir.</p>
     <div class="cta-btns">
-      <a href="#fiyatlandirma" class="btn-primary">MYO'yu Şimdi Uygula</a>
+      <a href="#fiyatlandirma" class="btn-primary">MYO Paketlerini İncele</a>
       <a href="mailto:bilgi@fupi.com.tr" class="btn-ghost">Danışman ile Görüş</a>
     </div>
   </div>

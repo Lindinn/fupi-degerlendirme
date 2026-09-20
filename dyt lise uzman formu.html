@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>FUPİ Lise DYT — Uzman Değerlendirme Formu</title>
+<style>
+  :root{
+    --mor:#3C3489; --mor2:#5B52B5; --pastel:#EEEDFE; --cizgi:#D6D3F0;
+    --metin:#1F1F28; --soluk:#6B6B7B; --bg:#FAFAFD; --kart:#FFFFFF;
+    box-sizing:border-box;
+    padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+  }
+  *,*::before,*::after{box-sizing:inherit}
+  body{margin:0;background:var(--bg);color:var(--metin);
+       font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+       font-size:16px;line-height:1.55}
+  .wrap{max-width:780px;margin:0 auto;padding:20px 16px 80px}
+  header{display:flex;align-items:baseline;gap:10px;margin-bottom:18px}
+  .logo{font-weight:800;font-size:26px;color:var(--mor);letter-spacing:.5px}
+  .logo small{font-weight:500;font-size:13px;color:var(--soluk);margin-left:6px}
+  h1{font-size:22px;margin:0 0 6px}
+  h2{font-size:18px;margin:26px 0 10px;color:var(--mor)}
+  .kart{background:var(--kart);border:1px solid var(--cizgi);border-radius:12px;padding:18px;margin-bottom:16px}
+  .bilgi{background:var(--pastel);border:1px solid var(--cizgi);border-radius:12px;padding:16px;margin-bottom:16px;font-size:15px}
+  label{display:block;font-weight:600;font-size:14px;margin:12px 0 5px}
+  input[type=text],input[type=email],select,textarea{
+    width:100%;padding:10px 12px;border:1px solid var(--cizgi);border-radius:8px;font:inherit;font-size:15px;background:#fff}
+  textarea{min-height:64px;resize:vertical}
+  button{font:inherit;font-weight:600;border:0;border-radius:9px;padding:12px 20px;cursor:pointer}
+  .bas{background:var(--mor);color:#fff}
+  .bas:disabled{background:#B9B5DA;cursor:not-allowed}
+  .ikincil{background:#fff;color:var(--mor);border:1px solid var(--cizgi)}
+  .satir{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:18px}
+  .ilerleme{position:sticky;top:0;background:var(--bg);padding:10px 0 12px;z-index:5}
+  .cubuk{height:7px;background:#E6E4F4;border-radius:99px;overflow:hidden}
+  .dolu{height:100%;background:var(--mor);width:0;transition:width .25s}
+  .ustbilgi{display:flex;justify-content:space-between;font-size:13px;color:var(--soluk);margin-bottom:6px}
+  .etiket{display:inline-block;font-size:12px;color:var(--mor);background:var(--pastel);
+          border:1px solid var(--cizgi);border-radius:99px;padding:3px 10px;margin:0 6px 8px 0}
+  .yetBaslik{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;
+             border-bottom:2px solid var(--mor);padding-bottom:8px;margin:0 0 12px}
+  .yetBaslik .kod{font-weight:800;font-size:15px;color:var(--mor);letter-spacing:.5px}
+  .yetBaslik .ad{font-weight:700;font-size:19px;color:var(--mor)}
+  .yetBaslik .olcum{font-size:13px;color:var(--soluk);width:100%}
+  .senaryo{background:var(--pastel);border-left:4px solid var(--mor);border-radius:8px;padding:14px 16px;margin:10px 0 18px;font-size:16px}
+  .sec{border:1px solid var(--cizgi);border-radius:10px;padding:14px;margin-bottom:12px;background:#fff}
+  .sec.secildi{border-color:var(--mor2);box-shadow:0 0 0 1px var(--mor2) inset}
+  .harf{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:7px;
+        background:var(--mor);color:#fff;font-weight:700;font-size:14px;margin-right:8px;flex:none}
+  .secust{display:flex;align-items:flex-start;margin-bottom:12px}
+  .olcek{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+  .olcek .uc{font-size:12px;color:var(--soluk);flex:none;width:100%}
+  .puan{flex:1;min-width:52px;text-align:center;padding:9px 0;border:1px solid var(--cizgi);border-radius:8px;
+        background:#fff;cursor:pointer;font-weight:600;font-size:15px;user-select:none}
+  .puan:hover{border-color:var(--mor2)}
+  .puan.aktif{background:var(--mor);color:#fff;border-color:var(--mor)}
+  .uyari{color:#A3282D;font-size:14px;margin-top:10px;display:none}
+  .durum{font-size:14px;color:var(--soluk);margin-top:10px}
+  .gostergeler{font-size:14px;color:var(--soluk);margin:0;padding-left:20px}
+  .gostergeler li{margin-bottom:3px}
+  .gizli{display:none}
+  .orta{text-align:center}
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){--bg:#15151C;--kart:#1E1E27;--metin:#ECECF2;--soluk:#A0A0B0;
+      --pastel:#25233A;--cizgi:#3A3852}
+    :root:not([data-theme="light"]) input,:root:not([data-theme="light"]) select,
+    :root:not([data-theme="light"]) textarea,:root:not([data-theme="light"]) .sec,
+    :root:not([data-theme="light"]) .puan,:root:not([data-theme="light"]) .ikincil{background:#1E1E27;color:#ECECF2}
+    :root:not([data-theme="light"]) .logo{color:#A9A2F0}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+<header><span class="logo">FUPİ<small>Kariyer Tasarımı</small></span></header>
+
+<!-- GIRIS -->
+<section id="giris">
+  <h1>Lise Durumsal Yargı Testi — Uzman Değerlendirme Formu</h1>
+  <div class="bilgi">
+    <p style="margin-top:0"><strong>Ne yapıyoruz?</strong> Lise öğrencilerine yönelik bir durumsal yargı testi geliştiriyoruz. Test, yedi temel yetkinliği ölçüyor. Sizden istediğimiz, her senaryodaki dört seçeneğin durumu çözmede <strong>ne kadar etkili</strong> olduğunu puanlamanız.</p>
+    <p><strong>Nasıl puanlanır?</strong> Her seçeneği 1 ile 5 arasında değerlendirin: 1 = hiç etkili değil, 5 = çok etkili. Aynı puanı birden fazla seçeneğe verebilirsiniz. Seçenekleri birbirine göre sıralamanız gerekmiyor, her birini kendi başına değerlendirin.</p>
+    <p><strong>Süre.</strong> 35 senaryo var, yaklaşık 45 dakika sürer. Yanıtlarınız tarayıcınıza otomatik kaydedilir, ara verip aynı cihazdan kaldığınız yerden devam edebilirsiniz.</p>
+    <p style="margin-bottom:0"><strong>Değerlendirirken.</strong> Seçenekleri gerçek bir lise öğrencisinin yaşamı içinde düşünün. Bir seçeneğin uzun ya da kısa olması etkililiği hakkında bilgi vermez.</p>
+  </div>
+
+  <div class="kart">
+    <h2 style="margin-top:0">Değerlendirilecek yetkinlikler</h2>
+    <p style="font-size:14px;color:var(--soluk)">Her senaryonun hangi yetkinliği ölçtüğü ekranda belirtilir. Davranış göstergeleri aşağıdadır.</p>
+    <div id="gostergeKutu"></div>
+  </div>
+
+  <div class="kart">
+    <h2 style="margin-top:0">Değerlendirici bilgileri</h2>
+    <label for="ad">Ad ve soyad</label>
+    <input type="text" id="ad" autocomplete="name">
+    <label for="eposta">E-posta</label>
+    <input type="email" id="eposta" autocomplete="email">
+    <label for="rol">Uzmanlık alanı</label>
+    <select id="rol">
+      <option value="">Seçiniz</option>
+      <option>Rehber öğretmen / okul psikolojik danışmanı</option>
+      <option>Ölçme ve değerlendirme uzmanı</option>
+      <option>Psikolog</option>
+      <option>İnsan kaynakları / yetkinlik değerlendirme uzmanı</option>
+      <option>Öğretmen</option>
+      <option>Diğer</option>
+    </select>
+    <label for="lisedeneyim">Lise çağındaki gençlerle doğrudan çalışma deneyiminiz var mı?</label>
+    <select id="lisedeneyim">
+      <option value="">Seçiniz</option><option>Evet, halen çalışıyorum</option>
+      <option>Evet, geçmişte çalıştım</option><option>Hayır</option>
+    </select>
+    <div class="satir">
+      <button class="bas" id="baslaBtn">Değerlendirmeye başla</button>
+      <span class="durum" id="devamNot"></span>
+    </div>
+    <div class="uyari" id="girisUyari">Lütfen tüm alanları doldurun.</div>
+  </div>
+</section>
+
+<!-- DEGERLENDIRME -->
+<section id="form" class="gizli">
+  <div class="ilerleme">
+    <div class="ustbilgi"><span id="sayac"></span><span id="yuzde"></span></div>
+    <div class="cubuk"><div class="dolu" id="dolu"></div></div>
+  </div>
+  <div id="senaryoAlan"></div>
+  <div class="satir">
+    <button class="ikincil" id="geriBtn">Geri</button>
+    <button class="bas" id="ileriBtn">İleri</button>
+  </div>
+  <div class="uyari" id="formUyari">Devam etmek için dört seçeneği de puanlayın.</div>
+</section>
+
+<!-- BITIS -->
+<section id="bitis" class="gizli">
+  <div class="kart">
+    <h1 style="margin-top:0">Değerlendirme tamamlandı</h1>
+    <p id="ozet"></p>
+    <label for="genelNot">Bütün sete ilişkin genel yorumunuz (isteğe bağlı)</label>
+    <textarea id="genelNot" placeholder="Senaryoların dili, kapsamı ya da eksik bulduğunuz noktalar hakkında eklemek istedikleriniz"></textarea>
+    <div class="satir">
+      <button class="bas" id="gonderBtn">Yanıtları gönder</button>
+      <button class="ikincil" id="geriDonBtn">Yanıtlara geri dön</button>
+    </div>
+    <div class="durum" id="gonderDurum"></div>
+  </div>
+</section>
+
+<!-- TESEKKUR -->
+<section id="tesekkur" class="gizli">
+  <div class="kart orta">
+    <h1>Teşekkür ederiz</h1>
+    <p>Yanıtlarınız kaydedildi. Değerlendirmeniz testin puanlama anahtarının oluşturulmasında kullanılacak.</p>
+    <p style="font-size:14px;color:var(--soluk)">FUPİ Kariyer Tasarımı</p>
+  </div>
+</section>
+
+</div>
+
+<script>
+const WEBHOOK = "https://script.google.com/macros/s/AKfycbxRk3nUWyBcy0srzPFQMrFWl_tPglW-OBm8norELGpvkda5KAx_WP2nd73yFPNntOAvmg/exec";
+const SURUM = "lise-dyt-uzman-v1";
+const VERI = [{"kod": "Y1-01", "y": "Y1", "yad": "Analiz ve Problem Çözme", "b": "Okul ve ders yaşamı", "m": "Son iki deneme sınavında matematik netlerin belirgin biçimde düştü. Diğer derslerinde böyle bir düşüş yok. Matematiğe ayırdığın süreyi azaltmadın, hatta son haftalarda daha fazla çalıştın. Önümüzdeki ay bir deneme daha var.", "s": ["Son iki denemenin yanlışlarını çıkarır, hangi konu ve hata tipinde yoğunlaştığına bakarsın. Ağırlığını buna göre belirlersin.", "Çalışma süreni artırır, aynı kaynaktan daha fazla soru çözersin. Nedeni ne olursa olsun tekrarla kapanacağını düşünürsün.", "Yanlışların dağılımını sınav koşullarındaki değişimle birlikte okursun. Çalışma biçimini değiştirir, sonraki denemede işe yarayıp yaramadığını kontrol edersin.", "Öğretmenine netlerinin düştüğünü söyler, ne yapman gerektiğini sorarsın. Önerdiği çalışma düzenini olduğu gibi uygulayıp sonraki denemeyi beklersin."]}, {"kod": "Y1-02", "y": "Y1", "yad": "Analiz ve Problem Çözme", "b": "Okul ve ders yaşamı", "m": "Laboratuvar ödevinde aynı deneyi üç kez tekrarladın ve her seferinde farklı bir sonuç çıktı. Deney föyünü adım adım izlediğini düşünüyorsun. Raporu iki gün içinde teslim etmen gerekiyor.", "s": ["Deneyi bir kez daha tekrarlar, çıkan yeni sonucu doğru kabul edersin. Öncekilerden hangisine yakınsa onunla rapora yazarsın.", "Üç ölçümün hangi adımlarda farklılaştığını karşılaştırır, sıcaklık, süre ve okuma biçimi gibi değişkenlerden hangisinin oynadığını belirlemeye çalışırsın.", "Üç ölçümün ortalamasını alır, raporda tek sonuç olarak yazarsın. Farkın ölçüm sırasındaki normal dalgalanmadan geldiğini varsayıp rapora geçersin.", "Adımları karşılaştırıp şüphelendiğin değişkeni sabitler, deneyi o koşulda yinelersin. Sonuç tekrar ediyorsa nedeni raporda gerekçesiyle birlikte açıklarsın."]}, {"kod": "Y1-03", "y": "Y1", "yad": "Analiz ve Problem Çözme", "b": "Arkadaş grubu ve sosyal ortam", "m": "Arkadaş grubunuz her cumartesi buluşuyordu. Son üç haftadır planlar son anda bozuluyor ve gelenlerin sayısı ikiye üçe düştü. Kimse bunun nedenini açıkça söylemiyor. Bu hafta yine buluşma önerisi yapılacak.", "s": ["Gruba yeni bir buluşma önerisi yazar, gelenlerle devam edersin. Gelmeyenlerin ilgisini kaybettiğini düşünüp konuyu daha fazla kurcalamamayı seçersin.", "Son üç haftanın neresinde değişiklik olduğuna bakarsın: saat, mekan, maliyet ve sınav dönemi. Aradaki ortak noktayı ararsın.", "En yakın arkadaşına neden gelmediğini sorar, verdiği yanıtı grubun geneli için geçerli sayarsın. Buluşmayı ona göre kurgularsın.", "Değişen koşulları çıkarır, birkaç kişiye ayrı ayrı sorup tahminini doğrularsın. Yeni bir düzen önerip katılımı izlersin."]}, {"kod": "Y1-04", "y": "Y1", "yad": "Analiz ve Problem Çözme", "b": "Arkadaş grubu ve sosyal ortam", "m": "Sınıfça yıl sonu gezisi için para biriktiriyorsunuz. Toplanan tutar, hesapladığınız bütçenin yarısında kaldı ve gezi tarihine altı hafta var. Herkesin payını düzenli ödediği söyleniyor.", "s": ["Hesaplanan bütçeyle toplanan tutarı kalem kalem karşılaştırırsın: kişi sayısı, ödeme sıklığı ve fiyat artışları. Farkın nereden doğduğunu ararsın.", "Farkın kaynağını bulur, kalan altı hafta için yeni bir ödeme planı çıkarırsın. Üçüncü haftada ilerlemeyi hedefle karşılaştırırsın.", "Parayı toplayan arkadaşından listeyi ister, eksik ödeyenleri belirlersin. Onlara hatırlatma yapılmasını söyler, birkaç hafta boyunca sonucu beklersin.", "Herkesten acilen ek katkı istersin. Toplanan para yine yetmiyorsa geziyi daha ucuz bir alternatifle değiştirmeyi doğrudan gruba önerirsin."]}, {"kod": "Y1-05", "y": "Y1", "yad": "Analiz ve Problem Çözme", "b": "Dijital ortam ve sosyal medya", "m": "Okulun öğrenci sosyal medya hesabını yönetiyorsun. Son bir aydır paylaşımların görüntülenme sayısı yarı yarıya düştü. Paylaşım sıklığını ve içerik türünü değiştirmediğini düşünüyorsun. Yönetim hesabın canlandırılmasını istiyor.", "s": ["Paylaşım sayısını artırır, günde iki gönderi yayımlarsın. Görüntülenmenin zamanla kendiliğinden toparlanacağını düşünüp aynı içerik düzenini sürdürürsün.", "Uygulamanın istatistik ekranından hangi gönderi türünün ve hangi saatlerin düştüğünü incelersin. Düşüşün başladığı tarihte ne değiştiğine ayrıca bakarsın.", "İstatistikleri okuyup düşüşün başladığı tarihi belirlersin. İki farklı içerik biçimini iki hafta deneyip hangisinin işe yaradığına bakarsın.", "Takipçilerden birkaçına ne tür içerik istediklerini sorar, gelen ilk öneriyi doğrudan uygularsın. Sonraki hafta sayıların yükselmesini beklemeye geçersin."]}, {"kod": "Y2-01", "y": "Y2", "yad": "İş Birliği Geliştirme", "b": "Okul ve ders yaşamı", "m": "Dört kişilik grup ödevinde arkadaşlarından biri toplantılarda neredeyse hiç konuşmuyor. Verilen görevleri yapıyor ama fikir belirtmiyor. Ödevin en zor bölümünü kimin üstleneceğine bu hafta karar vermeniz gerekiyor.", "s": ["Toplantı öncesi ona hangi bölümde çalışmak istediğini sorar, beklentisini öğrenirsin. Toplantıda da söz sırasını ona açık biçimde açarsın.", "Görev dağılımını konuşan üç kişiyle yapar, sessiz arkadaşına kalan bölümü verirsin. Fikir söylemek isterse zaten söyleyeceğini düşünürsün.", "Beklentisini önceden öğrenir, toplantıda herkesin sırayla fikir söylediği bir düzen önerirsin. Dağılımı bu fikirler üzerinden kurarsın.", "Toplantıda ona doğrudan fikrini sorarsın. Kısa bir yanıt verirse bunu yeterli sayar, dağılımı diğerlerinin önerileri üzerinden tamamlarsın."]}, {"kod": "Y2-02", "y": "Y2", "yad": "İş Birliği Geliştirme", "b": "Okul ve ders yaşamı", "m": "Proje ekibinde iki arkadaşın sunum yöntemi konusunda anlaşamıyor. Biri video, diğeri canlı anlatım istiyor. Tartışma iki toplantıdır sürüyor ve ekip ikiye bölünmüş durumda. Teslime on gün kaldı.", "s": ["İki toplantı sonunda oylama yapılmasını önerir, çoğunluğun dediğini uygularsın. Azınlıkta kalanların zamanla kabulleneceğini düşünüp konuyu kapatırsın.", "Her iki tarafa yönteminin hangi soruna çözüm getirdiğini sorarsın. Ortak amacı netleştirip yöntemlerin ortak yanını gösterirsin.", "İki tarafı da dinler, sana daha mantıklı geleni seçersin. Kararını gerekçesiyle birlikte ekibe duyurup hazırlık çalışmasına geçersin.", "Ortak amacı netleştirir, kısa video ve canlı anlatımı birleştiren bir kurgu önerirsin. İkisine de sahiplendiği bölümü verirsin."]}, {"kod": "Y2-03", "y": "Y2", "yad": "İş Birliği Geliştirme", "b": "Arkadaş grubu ve sosyal ortam", "m": "Kulüp ekibinize başka bir şehirden taşınan bir öğrenci katıldı. Çalışma alışkanlıkları ve konuşma biçimi ekibin geri kalanından belirgin biçimde farklı. Ekipte birkaç kişi bu farkı esprilere konu ediyor. Yeni etkinlik hazırlığı bu hafta başlıyor.", "s": ["Yeni arkadaşına ekibin nasıl çalıştığını anlatır, uyum sağlaması için ona yardım edersin. Esprilerin sürmesi durumunda ortamı yumuşatmaya çalışırsın.", "Farklı çalışma biçimlerini ekibe açık biçimde konuşturur, hangisinin nerede işe yaradığını birlikte belirlersiniz. Hazırlığı buna göre kurarsın.", "Espri yapanlara katılmaz, sessiz kalmayı seçersin. Yeni arkadaşın zamanla ekibin çalışma biçimine alışacağını düşünüp hazırlığa geçersin.", "Onun alışık olduğu çalışma biçimini merak eder, kendisine sorarsın. Ekipte espri yapanlara bunun çalışmayı zorlaştırdığını sakin biçimde söylersin."]}, {"kod": "Y2-04", "y": "Y2", "yad": "İş Birliği Geliştirme", "b": "Arkadaş grubu ve sosyal ortam", "m": "Mezuniyet gecesi hazırlığında işlerin çoğunu üç kişi yürütüyor. Geri kalan yedi kişi toplantılara geliyor ama görev almıyor. Yük altındaki arkadaşların yorulmaya başladı. Hazırlığa üç hafta kaldı.", "s": ["Görev almayanlara tek tek ne yapmak istediklerini sorarsın. Hangi işin kime uygun olduğunu öğrenip listeyi yenilersin.", "İşleri yürüten üç kişiyle devam edersin. Görev almayanları zorlamanın ortamı gereceğini düşünüp kalan işleri aranızda yeniden bölersin.", "Herkesin ne yapabileceğini öğrenir, işleri görünür bir listeye bağlarsın. Haftalık kısa toplantıda ilerlemeyi düzenli olarak izlersiniz.", "Toplantıda herkesten görev almasını istersin. Gönüllü çıkmazsa kalan işleri yine aynı üç kişiye dağıtıp hazırlığı sürdürürsün."]}, {"kod": "Y2-05", "y": "Y2", "yad": "İş Birliği Geliştirme", "b": "Dijital ortam ve sosyal medya", "m": "Farklı okullardan öğrencilerle çevrimiçi bir yarışma projesi yürütüyorsunuz. Ortak dosyayı yalnızca iki kişi güncelliyor ve grup mesajlarına çoğu kişi yanıt vermiyor. Ekipte kimse yüz yüze görüşmedi. İlk teslim iki hafta sonra.", "s": ["Gruba yanıt vermelerini hatırlatan bir mesaj atarsın. Yanıt gelmezse eksik kalan bölümleri kendin tamamlayıp teslim tarihine yetiştirirsin.", "Kısa bir çevrimiçi görüşme kurar, sorumlulukları ve teslim tarihlerini birlikte belirlersiniz. Dosyada herkesin ilerlemesini gördüğü bir düzen oluşturursun.", "Dosyayı güncelleyen iki kişiyle işi bitirirsin. Uzaktan çalışmanın herkesi katmaya elverişli olmadığını düşünüp mevcut düzeni aynen sürdürürsün.", "Kimin hangi bölümden sorumlu olduğunu yazılı olarak netleştirir, herkese neye ihtiyaç duyduğunu sorarsın. Bilgiyi ortak dosyada görünür tutarsın."]}, {"kod": "Y3-01", "y": "Y3", "yad": "Değişime Uyum ve Çeviklik", "b": "Okul ve ders yaşamı", "m": "Öğretmenin, dönem sonu sınavının test yerine uzun yazılı sorulardan oluşacağını duyurdu. Sınava iki hafta var ve bütün hazırlığını test çözerek yaptın. Sınıfın çoğu duyuruya itiraz ediyor.", "s": ["İki hafta boyunca hazırlığını yazılı anlatıma çevirirsin: konuları kendi cümlelerinle yazmayı ve uzun soruları cevaplamayı denersin.", "Sınıfla birlikte itiraza katılır, kararın geri alınmasını beklersin. Hazırlığını değiştirmeden test çözmeyi sürdürüp sınav gününü beklersin.", "Hazırlığını yazılı anlatıma çevirir, öğretmenden örnek soru istersin. İlk denemende zorlandığın yeri belirleyip kalan süreyi ona ayırırsın.", "Yeni formatı kabul eder, test çözmeye devam ederken araya birkaç yazılı soru eklersin. Düzenini olduğu gibi korursun."]}, {"kod": "Y3-02", "y": "Y3", "yad": "Değişime Uyum ve Çeviklik", "b": "Okul ve ders yaşamı", "m": "Öğretmenin dersi bundan sonra grup çalışmasıyla işleyeceğini söyledi. Sınıfın çoğunluğu düz anlatımı tercih ettiğini söyleyip yeni düzene isteksiz yaklaşıyor. İlk grup çalışması bu hafta yapılacak.", "s": ["Yeni düzeni kabul eder, sana verilen görevi yaparsın. Sınıfın isteksizliğine karışmadan yalnızca kendi işini tamamlamayı seçersin.", "İlk çalışmada rol alır, neyin işe yaradığını not edersin. Bunları sınıfla ve öğretmenle paylaşıp düzenin oturmasına katkı verirsin.", "Çoğunlukla aynı fikirdesin, eski düzene dönülmesini istersin. Grup çalışmasında en az katkıyla yer alıp sonucun ne olacağını beklersin.", "Yeni düzenin hangi konularda işe yarayabileceğini düşünür, ilk çalışmada aktif rol alırsın. Grubundaki arkadaşlarını da katılmaya çağırırsın."]}, {"kod": "Y3-03", "y": "Y3", "yad": "Değişime Uyum ve Çeviklik", "b": "Arkadaş grubu ve sosyal ortam", "m": "Okullar arası turnuvada takımın için aylardır hazırlanıyorsun. Turnuvadan bir hafta önce kural değişikliği duyuruldu: maç süresi kısaldı ve oyuncu değişikliği sınırlandı. Hazırlığınız uzun süreli maç düzenine göre yapılmıştı.", "s": ["Kısa sürenin ve sınırlı değişikliğin oyununuzda neyi zorlaştıracağını düşünürsün. Takımla birlikte iki farklı başlangıç dizilişi denersiniz.", "Antrenörün yeni bir plan çıkarmasını beklersin. Verdiği plana uyar, kalan haftayı her zamanki çalışma düzeninde geçirirsin.", "Yeni kurala uygun dizilişleri dener, hangisinin işe yaradığını antrenmanda ölçersin. Turnuvada gerekirse dizilişi değiştirecek seçenek hazırlarsın.", "Hazırlığını değiştirmeden devam edersin. Kural değişikliğinin etkisinin küçük kalacağını düşünüp aynı oyun planıyla sahaya çıkmayı seçersin."]}, {"kod": "Y3-04", "y": "Y3", "yad": "Değişime Uyum ve Çeviklik", "b": "Arkadaş grubu ve sosyal ortam", "m": "Arkadaşlarınla planladığın günübirlik gezi için sabah buluştunuz. Gideceğiniz yerin hava koşulları nedeniyle kapandığını öğrendiniz. Herkes yola çıkmış durumda ve gün boş kaldı. Grupta belirgin bir hayal kırıklığı var.", "s": ["Planın bozulmasına üzülür, herkesin evine dönmesini önerirsin. Geziyi başka bir tarihe ertelemeyi grup sohbetine bırakmayı seçersin.", "İki alternatifi araştırır, süre ve maliyet açısından karşılaştırırsın. Grubun tercihine göre günü yeniden planlar, yola çıkarsınız.", "Elinizdeki süreyi ve ulaşım imkanını düşünüp iki alternatif yer önerirsin. Gruba seçim yapabilmeleri için ikisini de anlatırsın.", "Birinin yeni bir öneri getirmesini beklersin. Çıkan ilk öneriye katılır, grubun verdiği karara uyup günü öyle geçirirsin."]}, {"kod": "Y3-05", "y": "Y3", "yad": "Değişime Uyum ve Çeviklik", "b": "Dijital ortam ve sosyal medya", "m": "Okul, ödev teslimini yeni bir dijital platform üzerinden yapmaya geçti. Arayüz alışık olduğunuzdan farklı ve ilk teslim bu hafta. Sınıf arkadaşlarının çoğu platformu karışık bulduğunu söylüyor.", "s": ["Platformu kullanan bir arkadaşından yardım ister, ödevini onun anlattığı adımlarla yüklersin. Platformun kalan bölümleriyle daha sonra ilgilenirsin.", "Platformu kendin kurcalar, teslim dışındaki bölümlerini de denersin. Nasıl çalıştığını anladıktan sonra ödevini yükleyip teslimi tamamlarsın.", "Ödevini eski yöntemle hazırlar, öğretmenden başka bir yolla teslim istersin. Platformun düzelmesini ya da kararın geri alınmasını beklersin.", "Platformu deneyerek öğrenir, işe yarayan adımları kısa bir not haline getirirsin. Hazırladığın notu zorlanan arkadaşlarınla paylaşırsın."]}, {"kod": "Y4-01", "y": "Y4", "yad": "Etkili İletişim ve Müzakere", "b": "Okul ve ders yaşamı", "m": "Sınıfta bir sunum yapacaksın. Konu, sınıfın çoğunun daha önce hiç duymadığı teknik bir yöntem. Sunum on dakika sürecek ve sonunda sorular alınacak. Hazırladığın metin terimlerle dolu.", "s": ["Konuyu günlük hayattan bir örneğe bağlayarak anlatırsın. Terimleri ilk geçtikleri yerde sade bir karşılıkla açıklayıp devam edersin.", "Hazırladığın metni baştan sona olduğu gibi okursun. Terimleri açıklamanın sunumu uzatacağını düşünüp bütün soruları sonuna bırakmayı seçersin.", "Örnek üzerinden anlatır, arada sınıfa kısa sorular sorup anlaşılıp anlaşılmadığını görürsün. Gerektiğinde anlatımını hemen orada sadeleştirirsin.", "Zor terimleri tek tek tanımlayan bir sözlük slaytı eklersin. Sunumun geri kalanını hazırladığın metinle aynı biçimde sürdürürsün."]}, {"kod": "Y4-02", "y": "Y4", "yad": "Etkili İletişim ve Müzakere", "b": "Okul ve ders yaşamı", "m": "Sınıf temsilcisisin. Aynı haftaya üç sınav denk geldi ve sınıf, öğretmenden birinin ertelenmesini istiyor. Öğretmen programın sıkışık olduğunu söylüyor. Bu konuyu yarın öğretmenle konuşacaksın.", "s": ["Üç sınavın tarihlerini ve konularını çıkarır, yoğunluğu somut biçimde gösterirsin. Ertelemenin neden gerektiğini bu tablo üzerinden anlatırsın.", "Sınıfın yoğun olduğunu ve erteleme istediğini iletirsin. Öğretmen kabul etmezse konunun kapandığını sınıfa duyurup meseleyi bırakırsın.", "Tabloyu gösterir, öğretmenin program kısıtını dinlersin. Programa uyan ve sınıfı rahatlatan iki tarih önerip karar verirsiniz.", "Sınıfın bu hafta ne kadar zorlandığını anlatır, erteleme talebini tekrarlarsın. Öğretmenin programını konuşmaya açmadan yanıtını beklersin."]}, {"kod": "Y4-03", "y": "Y4", "yad": "Etkili İletişim ve Müzakere", "b": "Arkadaş grubu ve sosyal ortam", "m": "İki yakın arkadaşın tartıştı ve iki gündür konuşmuyorlar. İkisi de olayı sana ayrı ayrı anlatmak istiyor. Anlattıkları birbirini tutmuyor. Hafta sonu üçünüzün birlikte gideceği bir plan var.", "s": ["İkisini de sözünü kesmeden ayrı ayrı dinlersin. Anlattıklarında hangi noktada ayrıştıklarını kendi içinde belirleyip aklında tutarsın.", "Daha yakın olduğun arkadaşını dinler, olayı onun anlattığı gibi anlarsın. Diğerine barışmasını önerip aralarında aracılık edersin.", "İkisine de olayı fazla büyütmemelerini söylersin. Zamanla kendiliğinden geçeceğini düşünüp hafta sonu planını olduğu gibi sürdürürsün.", "İkisini de dinler, ayrıştıkları noktayı ikisine de sorarak doğrularsın. Uygun bir anda üçünüzün konuşabileceği ortam önerirsin."]}, {"kod": "Y4-04", "y": "Y4", "yad": "Etkili İletişim ve Müzakere", "b": "Arkadaş grubu ve sosyal ortam", "m": "Arkadaş grubunuz yaz için ortak bir plan yapıyor. Üç kişi kampa gitmek, üç kişi şehirde kalıp bütçeyi düşük tutmak istiyor. Tartışma uzadı ve karar bir haftadır çıkmıyor. Yerlerin doluşu yaklaşıyor.", "s": ["Kendi tercihini savunur, ikna olmayanların ayrı plan yapmasını önerirsin. Grubun ikiye bölünmesini bu koşullarda doğal karşılarsın.", "Beklentileri listeler, ikisini karşılayan bir seçenek ararsın: kısa kamp ve düşük bütçe. Öneriyi karar için gruba sunarsın.", "Her iki tarafa planından tam olarak ne beklediğini sorarsın: maliyet, süre ve program. Beklentileri tek tek listelersin.", "Çoğunluğun eğilimine göre karar verilmesini önerirsin. Çıkan sonucu herkesin kabul etmesini bekleyip hemen rezervasyon işine geçersin."]}, {"kod": "Y4-05", "y": "Y4", "yad": "Etkili İletişim ve Müzakere", "b": "Dijital ortam ve sosyal medya", "m": "Grup sohbetine yazdığın kısa bir mesaj yanlış anlaşıldı. Bir arkadaşın kendisine laf attığını düşünüp sitem etti. Sohbette birkaç kişi de ona katıldı. Oysa mesajın niyeti tamamen farklıydı.", "s": ["Arkadaşına özelden yazar, mesajı nasıl anladığını sorarsın. Onu dinledikten sonra ne demek istediğini sakin biçimde anlatırsın.", "Yanlış anlaşıldığını kısaca yazıp konuyu kapatırsın. Sohbette tartışmayı sürdürmenin işi büyüteceğini düşünüp sonrasında orada sessiz kalırsın.", "Önce onu dinler, yanlış anlaşılmanın hangi ifadeden doğduğunu birlikte bulursunuz. Ardından sohbete kısa bir düzeltme yazarsınız.", "Ne demek istediğini sohbette uzun bir mesajla açıklarsın. Açıklaman yeterli olmazsa tartışmayı orada bırakmayı tercih edersin."]}, {"kod": "Y5-01", "y": "Y5", "yad": "Yenilikçilik", "b": "Okul ve ders yaşamı", "m": "Okulun kitap kulübünde aylık toplantılara yalnızca beş kişi geliyor. Toplantı düzeni yıllardır aynı: herkes okuduğu kitabı sırayla anlatıyor. Kulübü canlandırmanız isteniyor ve ayrı bir bütçeniz yok.", "s": ["Toplantı düzenini korur, duyuruların sayısını ve görünürlüğünü artırırsın. Katılımın zamanla kendiliğinden yükseleceğini düşünüp aynı akışla devam edersin.", "Anlatım sırası yerine farklı bir biçim önerirsin: kitap üzerinden tartışma ya da canlandırma. Bir toplantıda denersiniz.", "Toplantıya ikram eklemeyi ve saatini değiştirmeyi önerirsin. Akışın geri kalanını olduğu gibi bırakıp sonucu birlikte görürsünüz.", "Denenmemiş bir biçim kurarsın: okuyanların kitabı tanıttığı kısa videolardan bir arşiv. Denemeden sonra katılımı ölçüp biçimi geliştirirsin."]}, {"kod": "Y5-02", "y": "Y5", "yad": "Yenilikçilik", "b": "Okul ve ders yaşamı", "m": "Sınıfça büyük bir sınava hazırlanıyorsunuz. Herkes aynı yöntemi kullanıyor: konu tekrarı ve deneme çözümü. Sonuçlar bir süredir aynı yerde duruyor. Öğretmen yeni önerilere açık olduğunu söyledi.", "s": ["Akran anlatımı gibi farklı bir yöntem önerirsin: herkes bir konuyu diğerlerine anlatır. Küçük bir grupla denersiniz.", "Başka sınıfların kullandığı çalışma programını alır, kendi düzenine eklersin. Denenmiş bir yolu izlemenin daha güvenli olduğunu düşünürsün.", "Mevcut yöntemi sürdürür, konu tekrarının ve deneme çözümünün sayısını artırırsın. Sonucu yalnızca çalışma süresinin belirlediğini düşünürsün.", "Farklı yöntemi bir hafta uygular, sonucu deneme puanlarıyla karşılaştırırsın. İşe yarıyorsa sınıfa yaymayı önerir, gerekirse yöntemi değiştirirsin."]}, {"kod": "Y5-03", "y": "Y5", "yad": "Yenilikçilik", "b": "Dijital ortam ve sosyal medya", "m": "Kulüp etkinlik duyurularını okul panosuna asıyorsunuz. Duyuruları gören öğrenci sayısı çok az ve son iki etkinlik boş geçti. Okulda herkesin telefonu var. Pano dışında kullandığınız bir kanal yok.", "s": ["Duyuruların telefondan ulaşacağı bir kanal kurmayı önerirsin: sınıf temsilcileri üzerinden bütün sınıflara ulaşan ortak bir mesaj listesi.", "Panodaki duyuruları büyütür, daha renkli ve dikkat çekici hazırlarsın. Aynı yerde görünür olmanın katılımı artıracağını düşünürsün.", "Kulüp için bir duyuru hesabı ve ortak takvim kurarsın. İlk iki etkinlikte katılımı ölçüp kanalı geliştirirsin.", "Duyuruları sınıflara tek tek girip sözlü olarak da anlatırsın. Panoyu kullanmayı sürdürüp bir sonraki etkinlikte katılımı beklersin."]}, {"kod": "Y5-04", "y": "Y5", "yad": "Yenilikçilik", "b": "Arkadaş grubu ve sosyal ortam", "m": "Sınıfça yardım kampanyası düzenliyorsunuz. Her yıl aynı yöntem kullanılıyor: sınıf kapısına bir kutu koymak. Toplanan tutar yıllardır düşük kalıyor. Bu yıl kampanyayı siz yürüteceksiniz ve iki haftanız var.", "s": ["Katkının karşılığında küçük bir şeyin verildiği bir düzen önerirsin: sınıfça hazırlanan el yapımı ürünler ya da kartlar.", "Kutuyu yine kapıya koyar, yanına hatırlatma yazısı eklersin. Bu yıl daha fazla kişinin katkı vermesini umarak süreci başlatırsın.", "Bağış yerine ürün satışına dayalı yeni bir kurgu denersiniz. İlk günün sonucunu ölçüp ürünü ve fiyatı değiştirirsiniz.", "Kutu yöntemini sürdürür, yanına katkı verenlerin yazıldığı bir imza listesi eklersin. Bunun sınıfta katılımı artırabileceğini düşünürsün."]}, {"kod": "Y5-05", "y": "Y5", "yad": "Yenilikçilik", "b": "Arkadaş grubu ve sosyal ortam", "m": "Arkadaşlarınla mahalledeki gençler için küçük bir turnuva düzenlemek istiyorsunuz. Uygun saha bulamadınız ve kiralama ücretleri bütçenizin çok üstünde. Katılmak isteyen yirmi kişi var ve tarih yaklaşıyor.", "s": ["Turnuvayı iptal eder, uygun saha bulunduğunda tekrar denemeyi önerirsin. Koşullar elverişli olmadığı için tarihi belirsiz bırakırsın.", "Saha dışında oynanabilecek bir biçim önerirsin: okul bahçesi ya da park, kısa süreli ve az oyunculu maçlar.", "Katılımcılardan ek katkı toplayıp sahayı kiralamayı önerirsin. Toplanan para yine yetmezse katılımcı sayısını azaltmayı gruba önerirsin.", "Turnuva biçimini değiştirirsin: küçük alanda kısa maçlar ve hafta içine yayılan takvim. İlk günü deneyip ayarlarsınız."]}, {"kod": "Y6-01", "y": "Y6", "yad": "Teknoloji ve Bilgi Okuryazarlığı", "b": "Dijital ortam ve sosyal medya", "m": "Sosyal medyada bir video dolaşıyor: belirli bir içeceğin sınav başarısını artırdığı iddia ediliyor. Video çok paylaşılmış ve altında olumlu yorumlar var. Sınıftan birkaç kişi denemeye başladı bile.", "s": ["İddianın dayandığı bir çalışma olup olmadığına bakarsın. Videoda herhangi bir kaynak gösterilmiyorsa bilgiyi doğrulanmamış sayıp beklersin.", "Videoyu paylaşan hesabın takipçi sayısına ve diğer videolarına bakarsın. Hesap güvenilir görünüyorsa iddiayı doğru kabul edersin.", "İddiayı bağımsız kaynaklarda ararsın: üniversite sayfaları ve bilimsel yayın özetleri. Bulduklarını karşılaştırıp sonucu sınıfla birlikte değerlendirirsin.", "Yorumların çokluğuna bakıp iddiayı makul bulursun. Sen de denemeye başlar, sonucu yalnızca kendi deneyimine göre değerlendirirsin."]}, {"kod": "Y6-02", "y": "Y6", "yad": "Teknoloji ve Bilgi Okuryazarlığı", "b": "Dijital ortam ve sosyal medya", "m": "Performans ödevin için bir yapay zeka sohbet aracına soru sordun. Araç akıcı bir metin ve üç kaynak adı verdi. Metin ödevin konusuna tam olarak uyuyor. Teslime iki gün kaldı.", "s": ["Metni ödevine olduğu gibi aktarırsın. Araç kaynak adı verdiği için içindeki bilginin de doğru olduğunu kabul edersin.", "Kaynakların gerçekten var olduğunu doğrular, metindeki iddiaları asıl kaynaktan karşılaştırırsın. Ödevde hangi bilginin nereden geldiğini açıkça belirtirsin.", "Verilen üç kaynağın gerçekten var olup olmadığını ararsın. Ulaşamadığın kaynağı ve ona dayanan cümleleri ödevden çıkarırsın.", "Metni kendi cümlelerinle yeniden yazar, verilen kaynakları ödevin sonuna eklersin. İçeriğin doğruluğunu ayrıca kontrol etmeyi gereksiz bulursun."]}, {"kod": "Y6-03", "y": "Y6", "yad": "Teknoloji ve Bilgi Okuryazarlığı", "b": "Dijital ortam ve sosyal medya", "m": "Kulüp bütçesini takip etmek için elektronik tablo kullanmanız gerekiyor. Uygulamayı daha önce hiç kullanmadın ve kulüpte de bilen kimse yok. Ay sonuna kadar gelir ve gider tablosunu hazırlaman isteniyor.", "s": ["Uygulamayı bilen bir tanıdığından tabloyu senin için hazırlamasını istersin. Sonraki güncellemeleri onun hazırladığı dosya üzerinde yaparsın.", "Hesapları kağıt üzerinde tutmayı sürdürürsün. Uygulamayı öğrenmenin çok zaman alacağını düşünüp bildiğin yöntemle devam etmeyi seçersin.", "Temel işlemleri deneyerek öğrenir, kısa eğitim videolarıyla toplam ve grafik özelliklerini eklersin. Adımları kulüp için not edersin.", "Uygulamayı kendin açar, temel işlemleri deneyerek öğrenirsin. Basit bir tablo kurup gelir ve giderleri düzenli girmeye başlarsın."]}, {"kod": "Y6-04", "y": "Y6", "yad": "Teknoloji ve Bilgi Okuryazarlığı", "b": "Okul ve ders yaşamı", "m": "Coğrafya ödevin için şehirlerdeki su tüketimi konusunu araştıracaksın. Arama motoruna konuyu yazdığında binlerce sonuç çıkıyor. Ödevde güncel veri kullanılması isteniyor. Teslim için bir haftan var.", "s": ["Önce tam olarak neyi aradığını netleştirirsin: hangi şehir, hangi yıl ve hangi ölçü birimi. Aramanı buna göre daraltırsın.", "İlk çıkan birkaç sitedeki bilgileri alır, ödevini bunlarla yazarsın. En üstte çıkan sonuçları en güvenilir kaynak saymayı sürdürürsün.", "Aradığını netleştirir, veriyi kurum kaynaklarında ararsın: belediye ve istatistik kurumu sayfaları. Bulduğun verinin yılını ödevde belirtirsin.", "Birkaç farklı siteden bilgi toplar, ortak noktaları ödevine aktarırsın. Verilerin hangi yıla ait olduğuna ayrıca bakmazsın."]}, {"kod": "Y6-05", "y": "Y6", "yad": "Teknoloji ve Bilgi Okuryazarlığı", "b": "Arkadaş grubu ve sosyal ortam", "m": "Sınıf grubunda bir mesaj dolaşıyor: okulun gelecek dönem tatil takvimini değiştireceği yazıyor. Mesaj başka bir gruptan iletilmiş. Birkaç arkadaşın buna göre plan yapmaya başladı bile.", "s": ["Okulun resmi duyuru kanallarına ve sitesine bakarsın. Orada böyle bir duyuru görünmüyorsa bilgiyi doğrulanana kadar beklemeye alırsın.", "Mesajı sen de gruba iletirsin. Bu kadar çok kişiye ulaştığı için bilginin doğru olduğunu düşünüp üzerinde durmazsın.", "Resmi kanalları kontrol eder, gerekirse okul yönetimine sorarsın. Öğrendiğini gruba kaynağıyla birlikte yazıp yanlış bilginin yayılmasını durdurursun.", "Mesajı ileten arkadaşına bilginin nereden geldiğini sorarsın. O da başka birinden aldığını söylerse bilgiyi doğru kabul edersin."]}, {"kod": "Y7-01", "y": "Y7", "yad": "Başarma Arzusu ve Girişimcilik", "b": "Okul ve ders yaşamı", "m": "Bu dönem fizik notunu belirgin biçimde yükseltmek istiyorsun. Geçen dönem ortalaman düşüktü. Dönemin ilk yazılısına altı hafta var ve haftalık çalışma programın şu an boş duruyor.", "s": ["Ulaşmak istediğin notu belirler, altı haftayı konulara bölersin. Haftalık çalışma saatlerini programına yazıp ilk haftadan uygulamaya başlarsın.", "Fizik çalışmaya daha fazla zaman ayırmayı düşünürsün. Programı netleştirmeyi yazılıya yaklaştıkça yapmayı planlayıp şimdilik bu konuyu bırakırsın.", "Hedefi ve planı yazar, her hafta konu testiyle nerede olduğunu ölçersin. Geride kaldığın konuyu sonraki haftaya alırsın.", "Haftada iki gün fizik çalışma kararı alırsın. Nasıl ve hangi konuyu çalışacağını ise o günkü duruma göre belirlersin."]}, {"kod": "Y7-02", "y": "Y7", "yad": "Başarma Arzusu ve Girişimcilik", "b": "Okul ve ders yaşamı", "m": "Grup projesinde sunumu kimin yapacağı belli değil. Kimse gönüllü olmuyor ve sunum üç gün sonra. Grubun hazırladığı içerik büyük ölçüde hazır. Sunum, grubun ortak notunu doğrudan etkileyecek.", "s": ["Gruba kura çekilmesini önerirsin. Kime çıkarsa onun hazırlanmasını bekler, kalan üç günde yalnızca kendi bölümünle ilgilenirsin.", "Sunumu kendin üstlenir, üç gün içinde grubun hazırladığı içeriği baştan sona çalışıp tümünü eksiksiz anlatmaya hazırlanırsın.", "Grupta gönüllü çıkmasını beklersin. Son güne kadar kimse çıkmazsa öğretmenin aranızdan bir kişiyi seçmesini istemeyi düşünürsün.", "Sunumu üstlenir, provayı grupla birlikte yaparsın. Gelen geri bildirimlere göre anlatımı düzeltip son hali gruba onaylatırsın."]}, {"kod": "Y7-03", "y": "Y7", "yad": "Başarma Arzusu ve Girişimcilik", "b": "Arkadaş grubu ve sosyal ortam", "m": "Takımınla katıldığın yarışmada ilk elemeyi geçemediniz. İki arkadaşın takımdan ayrılmak istediğini söyledi. Bir sonraki yarışmaya iki ay var ve takımda dört kişi kaldı.", "s": ["Takımın dağılmasını şimdilik kabul edersin. İki ay sonraki yarışmaya katılmayı koşullar düzelirse ileride yeniden değerlendirmeyi düşünürsün.", "Kalan dört kişiyle devam etme kararı alırsın. Elemede nerede zorlandığınızı birlikte konuşup çalışmaya hemen yeniden başlarsınız.", "Ayrılmak isteyenleri kalmaları için ikna etmeye çalışırsın. Yine de kalmazlarsa takımı dağıtıp bir süre ara vermeyi seçersin.", "Kalanlarla devam eder, elemedeki eksikleri çıkarıp iki aylık çalışma takvimi kurarsın. İlerlemeyi her hafta gözden geçirirsiniz."]}, {"kod": "Y7-04", "y": "Y7", "yad": "Başarma Arzusu ve Girişimcilik", "b": "Arkadaş grubu ve sosyal ortam", "m": "Arkadaşınla el yapımı ürünler satmaya başladınız. İlk iki haftada beklediğiniz ilgiyi göremediniz ve malzeme maliyeti çıkmadı. Elinizde satılmamış ürünler var. Arkadaşın bırakmayı düşündüğünü söyledi.", "s": ["Neden ilgi görmediğini araştırırsın: fiyat, ürün çeşidi ve satış yeri. Bulduğuna göre bir değişiklik yapıp satmaya devam edersin.", "İşi bırakır, elinizde kalan ürünleri arkadaşlarınıza dağıtırsın. Fikrin tutmadığını düşünüp zamanını başka bir işe ayırmayı seçersin.", "Nedeni araştırır, farklı bir satış kanalı denersin. İki hafta sonunda satış sayısını karşılaştırıp devam kararını buna göre verirsin.", "Fiyatı düşürüp bir hafta daha denersin. Ürünler yine satılmazsa işi bitirmeye karar verip kalan malzemeleri kaldırırsın."]}, {"kod": "Y7-05", "y": "Y7", "yad": "Başarma Arzusu ve Girişimcilik", "b": "Dijital ortam ve sosyal medya", "m": "İlgi duyduğun bir konuda kısa videolar paylaşmaya başladın. İlk beş videonun izlenme sayısı çok düşük kaldı. Videoları hazırlamak uzun sürüyor. Yakın çevren bu işe devam etmenin anlamsız olduğunu söylüyor.", "s": ["Aynı biçimde video paylaşmayı sürdürürsün. İzlenmenin zamanla kendiliğinden artacağını düşünüp hazırlık düzeninde herhangi bir değişiklik yapmazsın.", "İzlenme verilerini inceler, iki farklı anlatım biçimi denersin. Dört hafta sonunda sonuçları karşılaştırıp devam kararını verirsin.", "Paylaşmayı bırakırsın. Konunun ilgi görmediğini düşünüp zamanını ve emeğini tamamen başka bir işe ayırmayı tercih edersin.", "Hangi videonun görece daha çok izlendiğine bakarsın. Süreyi ve anlatım biçimini buna göre değiştirip paylaşmayı sürdürürsün."]}];
+const GOSTERGE = {"Y1": ["Sorunların nedenlerini anlamaya çalışır.", "Sorunu belirler, elindeki bilgileri ve yeni elde ettiklerini bütünsel bir bakış açısıyla değerlendirir, neden-sonuç bağlantılarını görür.", "Sorunlara uygun, sistematik çözüm önerileri getirir, alternatifleri düşünür.", "Elindeki bilgilerden doğru çıkarımlar yapar, etkin kararlar alır.", "Kararlarının sonuçlarını çok yönlü değerlendirir.", "Sorunların nedenlerini araştırmak için harekete geçer, ek bilgiyi sorgular."], "Y2": ["İş birliği içinde olduğu kişilerin beklentilerini anlar.", "Bilgisini birlikte çalıştığı kişilerle paylaşır.", "Fikir ayrılıklarını yapıcı bir yaklaşımla yönetir.", "Farklı kültürlerden gelen kişilerle uyumlu şekilde çalışabilir.", "Bir ekiple fiziken bir arada olmasa dahi iş birliği ortamı yaratır, iş birliğine destek verir.", "Diğerlerinin fikir ve görüşlerini dinler, paylaşmasına destek olur."], "Y3": ["Değişimi kabul eder, direnç göstermez.", "Değişimin uygulanmasına destek verir.", "Değişen koşullar karşısında hızla yeni duruma uygun alternatif çözüm önerileri ve planlar belirleyebilir.", "Geliştirmesi gereken alanların farkındadır, bu konuda gelişim faaliyetlerine katılır.", "Merak eder, bilmediği konuları araştırır ve öğrenmeye çalışır.", "Değişen koşullarda davranışlarını yeni duruma uygun olacak şekilde değiştirir."], "Y4": ["Karmaşık durumları anlaşılır şekilde ifade edebilir.", "Karşısındaki kişiyi söz kesmeden etkin dinler.", "Karşısındaki kişileri somut verileri ve rasyonel argümanları kullanarak ikna eder.", "Müzakere ortamında kazan-kazan ilkesiyle hareket eder.", "İletişimde etkin beden dili kullanır."], "Y5": ["Sorunlara sıra dışı ve uygulanabilir çözümler getirir.", "Daha önce denenmemiş yöntemleri uygulamaktan çekinmez.", "Dijital dönüşüm fırsatı olabilecek durumları fark eder.", "Kendisini kurallarla sınırlamadan mevcut süreçleri ve kuralları sorgulayarak harekete geçer."], "Y6": ["Bilgisayar, akıllı telefon ve tablet gibi cihazlara hakimdir.", "Çevrimiçi uygulamalarda kullanılan yöntemleri çabuk kavrar ve hemen kullanmaya başlar.", "Yeni teknolojik gelişmeleri takip eder ve bu konularda öğrenmeye isteklidir.", "İçerikteki bilgiyi etkin biçimde değerlendirir.", "Bilgi ihtiyacını doğru bir biçimde tanımlar.", "Bilgi ihtiyacını hangi kaynaklardan gidereceğinin farkındadır."], "Y7": ["Yüksek hedefler belirler ve bu hedeflere ulaşmak için kararlılıkla çalışır.", "Zorluklarla karşılaştığında motivasyonunu korur ve çalışmayı sürdürür.", "Engeller ortaya çıktığında alternatif yollar arar, işi tamamlamaktan vazgeçmez.", "Sorumluluk almaktan çekinmez, üstlendiği görevleri sahiplenir.", "Sonuçlara odaklanır, performansını ve ilerlemeyi düzenli olarak takip eder."]};
+const HARF = ["A","B","C","D"];
+const KEY = "fupi_dyt_uzman_v1";
+// Uzman sürümünde her senaryonun üstünde ölçülen yetkinlik yazar.
+// Öğrenci sürümü için tek yapılacak: aşağıdaki değeri false yapmak.
+const YETKINLIK_GOSTER = true;
+
+let st = { id:null, kimlik:{}, puan:{}, not:{}, genel:"", i:0, basla:null };
+
+function kaydet(){ try{ localStorage.setItem(KEY, JSON.stringify(st)); }catch(e){} }
+function yukle(){ try{ const r=localStorage.getItem(KEY); if(r) return JSON.parse(r); }catch(e){} return null; }
+function yeniId(){ return "U" + Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
+const $ = s => document.querySelector(s);
+
+// Gosterge kutusu
+(function(){
+  const ad = {};
+  VERI.forEach(v => ad[v.y] = v.yad);
+  let h = "";
+  Object.keys(GOSTERGE).forEach(k=>{
+    h += '<p style="margin:14px 0 4px"><strong>'+k+' — '+ad[k]+'</strong></p><ul class="gostergeler">';
+    GOSTERGE[k].forEach(g => h += "<li>"+g+"</li>");
+    h += "</ul>";
+  });
+  $("#gostergeKutu").innerHTML = h;
+})();
+
+// Kayitli oturum
+(function(){
+  const k = yukle();
+  if(k && k.puan && Object.keys(k.puan).length){
+    st = k;
+    $("#ad").value = k.kimlik.ad || "";
+    $("#eposta").value = k.kimlik.eposta || "";
+    $("#rol").value = k.kimlik.rol || "";
+    $("#lisedeneyim").value = k.kimlik.lisedeneyim || "";
+    const n = Object.keys(k.puan).length;
+    $("#devamNot").textContent = n + " senaryo kayıtlı, kaldığınız yerden devam edeceksiniz.";
+  }
+})();
+
+$("#baslaBtn").onclick = function(){
+  const kim = {
+    ad: $("#ad").value.trim(), eposta: $("#eposta").value.trim(),
+    rol: $("#rol").value, lisedeneyim: $("#lisedeneyim").value
+  };
+  if(!kim.ad || !kim.eposta || !kim.rol || !kim.lisedeneyim){
+    $("#girisUyari").style.display="block"; return;
+  }
+  $("#girisUyari").style.display="none";
+  st.kimlik = kim;
+  if(!st.id) st.id = yeniId();
+  if(!st.basla) st.basla = new Date().toISOString();
+  st.i = VERI.findIndex(v => !st.puan[v.kod]);
+  if(st.i < 0) st.i = VERI.length - 1;
+  kaydet();
+  $("#giris").classList.add("gizli");
+  $("#form").classList.remove("gizli");
+  ciz();
+};
+
+function ciz(){
+  const v = VERI[st.i];
+  const p = st.puan[v.kod] || {};
+  let h = "";
+  if(YETKINLIK_GOSTER){
+    h += '<div class="yetBaslik"><span class="kod">'+v.y+'</span><span class="ad">'+v.yad+'</span>'
+       + '<span class="olcum">Bu senaryo bu yetkinliği ölçmek üzere yazılmıştır. Seçenekleri bu yetkinlik açısından değerlendirin.</span></div>';
+  }
+  h += '<span class="etiket">'+v.kod+'</span><span class="etiket">'+v.b+'</span>';
+  h += '<div class="senaryo">'+v.m+'</div>';
+  h += '<p style="font-weight:600;margin:0 0 10px">Her seçeneği durumu çözmedeki etkililiği açısından puanlayın.</p>';
+  v.s.forEach(function(t,i){
+    const sec = p[HARF[i]];
+    h += '<div class="sec'+(sec?' secildi':'')+'" id="sec'+i+'">';
+    h += '<div class="secust"><span class="harf">'+HARF[i]+'</span><span>'+t+'</span></div>';
+    h += '<div class="olcek"><span class="uc">1 = hiç etkili değil &nbsp;·&nbsp; 5 = çok etkili</span>';
+    for(let n=1;n<=5;n++){
+      h += '<div class="puan'+(sec==n?' aktif':'')+'" data-h="'+HARF[i]+'" data-n="'+n+'">'+n+'</div>';
+    }
+    h += '</div></div>';
+  });
+  h += '<label for="notAlan">Bu senaryoya ilişkin notunuz (isteğe bağlı)</label>';
+  h += '<textarea id="notAlan" placeholder="Anlaşılmayan ifade, gerçekçi bulmadığınız nokta ya da eklemek istediğiniz seçenek">'+(st.not[v.kod]||"")+'</textarea>';
+  $("#senaryoAlan").innerHTML = h;
+
+  document.querySelectorAll(".puan").forEach(function(el){
+    el.onclick = function(){
+      const hf = el.dataset.h, n = +el.dataset.n;
+      if(!st.puan[v.kod]) st.puan[v.kod] = {};
+      st.puan[v.kod][hf] = n;
+      kaydet(); ciz(); guncelle();
+    };
+  });
+  $("#notAlan").oninput = function(){ st.not[v.kod] = this.value; kaydet(); };
+
+  $("#geriBtn").style.visibility = st.i === 0 ? "hidden" : "visible";
+  $("#ileriBtn").textContent = st.i === VERI.length-1 ? "Değerlendirmeyi bitir" : "İleri";
+  $("#formUyari").style.display = "none";
+  guncelle();
+  window.scrollTo({top:0,behavior:"instant"});
+}
+
+function guncelle(){
+  const tam = VERI.filter(v => st.puan[v.kod] && Object.keys(st.puan[v.kod]).length === 4).length;
+  $("#sayac").textContent = "Senaryo " + (st.i+1) + " / " + VERI.length;
+  $("#yuzde").textContent = tam + " senaryo tamamlandı";
+  $("#dolu").style.width = (100*tam/VERI.length) + "%";
+}
+
+$("#geriBtn").onclick = function(){ if(st.i>0){ st.i--; kaydet(); ciz(); } };
+
+$("#ileriBtn").onclick = function(){
+  const v = VERI[st.i];
+  const p = st.puan[v.kod] || {};
+  if(Object.keys(p).length < 4){ $("#formUyari").style.display="block"; return; }
+  if(st.i < VERI.length-1){ st.i++; kaydet(); ciz(); }
+  else bitir();
+};
+
+function bitir(){
+  const eksik = VERI.filter(v => !st.puan[v.kod] || Object.keys(st.puan[v.kod]).length < 4);
+  $("#form").classList.add("gizli");
+  $("#bitis").classList.remove("gizli");
+  $("#ozet").innerHTML = eksik.length
+    ? "<strong>"+eksik.length+" senaryo eksik:</strong> "+eksik.map(e=>e.kod).join(", ")+". Geri dönüp tamamlayabilirsiniz."
+    : "35 senaryonun tamamını değerlendirdiniz. Göndermeden önce genel yorumunuzu ekleyebilirsiniz.";
+  $("#genelNot").value = st.genel || "";
+  window.scrollTo({top:0,behavior:"instant"});
+}
+
+$("#geriDonBtn").onclick = function(){
+  st.genel = $("#genelNot").value;
+  kaydet();
+  $("#bitis").classList.add("gizli");
+  $("#form").classList.remove("gizli");
+  ciz();
+};
+
+$("#gonderBtn").onclick = function(){
+  st.genel = $("#genelNot").value; kaydet();
+  const btn = this; btn.disabled = true;
+  $("#gonderDurum").textContent = "Gönderiliyor...";
+  const bitisZ = new Date().toISOString();
+  const satirlar = [];
+  VERI.forEach(function(v){
+    const p = st.puan[v.kod] || {};
+    HARF.forEach(function(h){
+      if(p[h] != null){
+        satirlar.push({
+          uzman_id: st.id, ad: st.kimlik.ad, eposta: st.kimlik.eposta, rol: st.kimlik.rol,
+          lise_deneyim: st.kimlik.lisedeneyim,
+          kod: v.kod, yetkinlik: v.y, baglam: v.b, secenek: h, puan: p[h],
+          senaryo_not: st.not[v.kod] || "", genel_not: st.genel || "",
+          basla: st.basla, bitis: bitisZ, surum: SURUM
+        });
+      }
+    });
+  });
+  fetch(WEBHOOK, {
+    method: "POST", mode: "no-cors",
+    headers: {"Content-Type":"text/plain;charset=utf-8"},
+    body: JSON.stringify({ tip:"dyt_uzman", satirlar: satirlar })
+  }).then(function(){
+    try{ localStorage.removeItem(KEY); }catch(e){}
+    $("#bitis").classList.add("gizli");
+    $("#tesekkur").classList.remove("gizli");
+    window.scrollTo({top:0,behavior:"instant"});
+  }).catch(function(){
+    btn.disabled = false;
+    $("#gonderDurum").textContent = "Gönderim sırasında bir sorun oldu. Yanıtlarınız cihazınızda duruyor, birkaç dakika sonra tekrar deneyin.";
+  });
+};
+</script>
+</body>
+</html>

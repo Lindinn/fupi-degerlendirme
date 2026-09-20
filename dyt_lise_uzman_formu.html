@@ -7,7 +7,8 @@
 <style>
   :root{
     --mor:#3C3489; --mor2:#5B52B5; --pastel:#EEEDFE; --cizgi:#D6D3F0;
-    --metin:#1F1F28; --soluk:#6B6B7B; --bg:#FAFAFD; --kart:#FFFFFF;
+    --metin:#1F1F28; --soluk:#6B6B7B; --bg:#FFFFFF; --kart:#FFFFFF;
+    color-scheme:only light;
     box-sizing:border-box;
     padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
   }
@@ -45,30 +46,24 @@
   .yetBaslik .olcum{font-size:13px;color:var(--soluk);width:100%}
   .senaryo{background:var(--pastel);border-left:4px solid var(--mor);border-radius:8px;padding:14px 16px;margin:10px 0 18px;font-size:16px}
   .sec{border:1px solid var(--cizgi);border-radius:10px;padding:14px;margin-bottom:12px;background:#fff}
-  .sec.secildi{border-color:var(--mor2);box-shadow:0 0 0 1px var(--mor2) inset}
+  .sec.secildi{border-color:#2E9E6B;background:#F6FCF9}
   .harf{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:7px;
         background:var(--mor);color:#fff;font-weight:700;font-size:14px;margin-right:8px;flex:none}
   .secust{display:flex;align-items:flex-start;margin-bottom:12px}
   .olcek{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
   .olcek .uc{font-size:12px;color:var(--soluk);flex:none;width:100%}
-  .puan{flex:1;min-width:52px;text-align:center;padding:9px 0;border:1px solid var(--cizgi);border-radius:8px;
-        background:#fff;cursor:pointer;font-weight:600;font-size:15px;user-select:none}
-  .puan:hover{border-color:var(--mor2)}
-  .puan.aktif{background:var(--mor);color:#fff;border-color:var(--mor)}
+  .puan{flex:1;min-width:52px;text-align:center;padding:11px 0;border:1px solid var(--cizgi);border-radius:8px;
+        background:#fff;color:var(--metin);cursor:pointer;font-weight:600;font-size:15px;user-select:none;
+        transition:background .12s,color .12s,border-color .12s}
+  .puan:hover{border-color:var(--mor2);background:#F4F3FD}
+  .puan.aktif{background:#2E9E6B;color:#fff;border-color:#24804F;font-weight:800;
+              box-shadow:0 0 0 2px #C7EAD8}
   .uyari{color:#A3282D;font-size:14px;margin-top:10px;display:none}
   .durum{font-size:14px;color:var(--soluk);margin-top:10px}
   .gostergeler{font-size:14px;color:var(--soluk);margin:0;padding-left:20px}
   .gostergeler li{margin-bottom:3px}
   .gizli{display:none}
   .orta{text-align:center}
-  @media (prefers-color-scheme: dark){
-    :root:not([data-theme="light"]){--bg:#15151C;--kart:#1E1E27;--metin:#ECECF2;--soluk:#A0A0B0;
-      --pastel:#25233A;--cizgi:#3A3852}
-    :root:not([data-theme="light"]) input,:root:not([data-theme="light"]) select,
-    :root:not([data-theme="light"]) textarea,:root:not([data-theme="light"]) .sec,
-    :root:not([data-theme="light"]) .puan,:root:not([data-theme="light"]) .ikincil{background:#1E1E27;color:#ECECF2}
-    :root:not([data-theme="light"]) .logo{color:#A9A2F0}
-  }
 </style>
 </head>
 <body>

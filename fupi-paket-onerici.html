@@ -159,8 +159,8 @@ h3.bolum { font-size: 15px; text-transform: uppercase; letter-spacing: .07em; co
 
 <!-- 3 -->
 <section class="adim" data-adim="3">
-  <p class="soru" id="soru3">Şu an neredesin?</p>
-  <p class="ipucu">Sana en yakın olanı seç.</p>
+  <p class="soru" id="soru3">Şu an:</p>
+  <p class="ipucu">Cümleyi tamamlayan seçeneği işaretle.</p>
   <div class="secenekler" id="s3"></div>
 </section>
 
@@ -188,17 +188,16 @@ h3.bolum { font-size: 15px; text-transform: uppercase; letter-spacing: .07em; co
 
 <script>
 var bloklar = {
-  M: { ad: "Mesleki Yönelim", sade: "Ne tür işler ilgini çekiyor, ne yaparken keyif alıyorsun",
-       sadeV: "Çocuğunuzun ne tür işlere ilgi duyduğu" },
-  D: { ad: "Yetkinlik Profili", sade: "Yetkinliklerin açısından güçlü ve gelişime açık yönlerin",
-       sadeV: "Çocuğunuzun güçlü ve gelişime açık yönleri" },
-  C: { ad: "Öz Değerlendirme", sade: "Yetkinlikler açısından kendini nasıl gördüğün",
-       sadeV: "Çocuğunuzun kendini nasıl gördüğü" },
-  F: { ad: "Yetenek Taraması", sade: "Bilişsel yeteneklerinin hangi düzeyde olduğu",
-       sadeV: "Çocuğunuzun bilişsel yetenek düzeyi" },
-  S: { ad: "Davranış Analizi", sade: "Gerçek bir görevde yetkinliklerini nasıl kullandığın",
-       sadeV: "Çocuğunuzun gerçek bir görevde nasıl davrandığı" },
-  C_: { ad: "Çalışma Değerleri", sade: "Nasıl bir çalışma hayatı istediğin" }
+  M: { ad: "Mesleki Yönelim", sade: "İş hayatında hangi tür işlerin ilgini çektiği",
+       sadeV: "Çocuğunuzun iş hayatında hangi tür işlerin ilgisini çektiği" },
+  D: { ad: "Yetkinlik Profili", sade: "İş hayatında karşılaşacağın durumları yorumlama kapasiten",
+       sadeV: "Çocuğunuzun iş hayatında karşılaşacağı durumları yorumlama kapasitesi" },
+  C: { ad: "Öz Değerlendirme", sade: "İş hayatında beklenen davranışlarda kendini nasıl algıladığın",
+       sadeV: "Çocuğunuzun iş hayatında beklenen davranışlarda kendini nasıl algıladığı" },
+  F: { ad: "Yetenek Taraması", sade: "Bilişsel zeka potansiyelin",
+       sadeV: "Çocuğunuzun bilişsel zeka potansiyeli" },
+  S: { ad: "Davranış Analizi", sade: "Bir görev üstlendiğinde iş hayatında beklenen davranışları ne düzeyde sergilediğin",
+       sadeV: "Çocuğunuzun bir görev üstlendiğinde iş hayatında beklenen davranışları ne düzeyde sergileyeceği" }
 };
 
 var durumlar = {
@@ -209,18 +208,19 @@ var durumlar = {
                metinV: "Birkaç alan arasında kalmış, seçemiyor",
                cekirdek: ["M","F"], oncelik: ["M","F","D","C","S"] },
   emin_degil:{ metin: "Bir kararım var ama bana uygun mu emin değilim",
-               metinV: "Bir kararı var ama ona uygun mu emin değil",
+               metinV: "Bir kararı var ama kendisine uygun mu emin değil",
                cekirdek: ["M","D"], oncelik: ["M","D","F","S","C"] },
   net:       { metin: "Kararım net, nasıl ilerleyeceğimi bilmiyorum",
                metinV: "Kararı net, nasıl ilerleyeceğini bilmiyor",
                cekirdek: ["D"], oncelik: ["D","S","C","F","M"] }
 };
 
-var cevap = { kim: null, sinif: null, durum: null, merak: [], bicim: null, ek: false };
+var cevap = { kim: null, sinif: null, durum: null, merak: [], bicim: null };
 var adim = 1;
 
 function el(id) { return document.getElementById(id); }
 function veliMi() { return cevap.kim === "veli"; }
+function erkenSinif() { return cevap.sinif === "9" || cevap.sinif === "10"; }
 
 function kutuYap(hedef, liste, tekli, secilenler, tiklama) {
   hedef.innerHTML = "";
@@ -256,7 +256,8 @@ function ciz1() {
 function ciz2() {
   el("soru2").textContent = veliMi() ? "Çocuğunuz kaçıncı sınıfta?" : "Kaçıncı sınıftasın?";
   kutuYap(el("s2"), [
-    { deger: "9-10", isim: "9 veya 10. sınıf" },
+    { deger: "9", isim: "9. sınıf" },
+    { deger: "10", isim: "10. sınıf" },
     { deger: "11", isim: "11. sınıf" },
     { deger: "12", isim: "12. sınıf" },
     { deger: "mezun", isim: "Mezun" }
@@ -266,7 +267,7 @@ function ciz2() {
 }
 
 function ciz3() {
-  el("soru3").textContent = veliMi() ? "Çocuğunuz şu an nerede?" : "Şu an neredesin?";
+  el("soru3").textContent = veliMi() ? "Çocuğunuz şu an:" : "Şu an:";
   var liste = Object.keys(durumlar).map(function (k) {
     return { deger: k, isim: veliMi() ? durumlar[k].metinV : durumlar[k].metin };
   });
@@ -282,8 +283,6 @@ function ciz4() {
   sira.forEach(function (k) {
     liste.push({ deger: k, isim: veliMi() ? bloklar[k].sadeV : bloklar[k].sade });
   });
-  liste.push({ deger: "C_", isim: veliMi() ? "Nasıl bir çalışma hayatı istediği" : "Nasıl bir çalışma hayatı istediğim",
-               aciklama: "Tamamlayıcı araç, seçtiğin paketin üstüne eklenir" });
   liste.push({ deger: "HEPSI", isim: "Hepsini merak ediyorum",
                aciklama: veliMi() ? "Tüm araçların uygulandığı en kapsamlı paket" : "Tüm araçların uygulandığı en kapsamlı paket" });
 
@@ -295,8 +294,7 @@ function ciz4() {
       var i = cevap.merak.indexOf(d);
       if (i > -1) cevap.merak.splice(i, 1);
       else {
-        var anaSayisi = cevap.merak.filter(function (x) { return x !== "C_"; }).length;
-        if (d !== "C_" && anaSayisi >= 3) return;
+        if (cevap.merak.length >= 3) return;
         cevap.merak.push(d);
       }
     }
@@ -327,18 +325,17 @@ function ciz5() {
 function hesapla() {
   var d = durumlar[cevap.durum];
   var notlar = [];
-  var secilen = cevap.merak.filter(function (x) { return x !== "C_" && x !== "HEPSI"; });
-  var ekSecili = cevap.merak.indexOf("C_") > -1;
+  var secilen = cevap.merak.filter(function (x) { return x !== "HEPSI"; });
 
   if (cevap.merak.indexOf("HEPSI") > -1) {
     return { blok: ["M","D","C","F","S"], uzmanZorunlu: true, notlar: [],
-             cekirdek: d.cekirdek, tekArac: false, ek: ekSecili };
+             cekirdek: d.cekirdek, tekArac: false };
   }
 
   // Tek arac secildiyse paket aynen o olur, cekirdek zorla eklenmez
   if (secilen.length === 1) {
     return { blok: [secilen[0]], uzmanZorunlu: secilen[0] === "S", notlar: [],
-             cekirdek: d.cekirdek, tekArac: true, ek: ekSecili };
+             cekirdek: d.cekirdek, tekArac: true };
   }
 
   var cekirdek = d.cekirdek.slice();
@@ -348,7 +345,7 @@ function hesapla() {
   // Kural: iki ve uzeri bloklu paketlerde yalnizca oz beyan olmaz
   var ozBeyan = blok.length >= 2 && blok.every(function (b) { return b === "M" || b === "C"; });
   if (ozBeyan) {
-    var eklenecek = (cevap.sinif === "9-10") ? "S" : "F";
+    var eklenecek = erkenSinif() ? "S" : "F";
     blok.push(eklenecek);
     notlar.push("Seçtiğin araçların ikisi de kendini nasıl gördüğünü ölçüyor. Bunları birlikte okumak yerine dışarıdan bir ölçüm ekledik: " + bloklar[eklenecek].ad + ".");
   }
@@ -356,7 +353,7 @@ function hesapla() {
   // Kural: en fazla uc blok
   if (blok.length > 3) {
     var oncelik = d.oncelik.slice();
-    if (cevap.sinif === "9-10") {
+    if (erkenSinif()) {
       oncelik = oncelik.filter(function (x) { return x !== "S" && x !== "F"; }).concat(["F", "S"]);
     }
     var sirali = blok.slice().sort(function (a, b) { return oncelik.indexOf(a) - oncelik.indexOf(b); });
@@ -366,12 +363,12 @@ function hesapla() {
       disarida.map(function (x) { return bloklar[x].ad; }).join(" ve ") + " istersen sonradan eklenebilir.");
   }
 
-  if (cevap.sinif === "9-10" && blok.indexOf("F") > -1) {
-    notlar.push("9 ya da 10. sınıfta yetenek sonuçları hızla değişebiliyor, bu yüzden raporda düzey yerine güçlü ve zayıf yönlerin karşılaştırmasına ağırlık veriyoruz.");
+  if (erkenSinif() && blok.indexOf("F") > -1) {
+    notlar.push(cevap.sinif + ". sınıfta yetenek sonuçları hızla değişebiliyor, bu yüzden raporda düzey yerine güçlü ve zayıf yönlerin karşılaştırmasına ağırlık veriyoruz.");
   }
 
   return { blok: blok, uzmanZorunlu: blok.indexOf("S") > -1, notlar: notlar,
-           cekirdek: cekirdek, tekArac: false, ek: ekSecili };
+           cekirdek: cekirdek, tekArac: false };
 }
 
 function paketAdi(blok) {
@@ -383,7 +380,7 @@ function paketAdi(blok) {
 }
 
 function ucretsizCikisMi() {
-  return cevap.sinif === "9-10" && cevap.durum === "baslangic";
+  return erkenSinif() && cevap.durum === "baslangic";
 }
 
 function sonucCiz() {
@@ -412,8 +409,8 @@ function sonucCiz() {
   h += '</ul>';
 
   var gerekce = "";
-  var sinifMetni = { "9-10": "9 ya da 10. sınıftasın", "11": "11. sınıftasın", "12": "12. sınıftasın", "mezun": "mezunsun" }[cevap.sinif];
-  var sinifMetniV = { "9-10": "çocuğunuz 9 ya da 10. sınıfta", "11": "çocuğunuz 11. sınıfta", "12": "çocuğunuz 12. sınıfta", "mezun": "çocuğunuz mezun" }[cevap.sinif];
+  var sinifMetni = { "9": "9. sınıftasın", "10": "10. sınıftasın", "11": "11. sınıftasın", "12": "12. sınıftasın", "mezun": "mezunsun" }[cevap.sinif];
+  var sinifMetniV = { "9": "çocuğunuz 9. sınıfta", "10": "çocuğunuz 10. sınıfta", "11": "çocuğunuz 11. sınıfta", "12": "çocuğunuz 12. sınıfta", "mezun": "çocuğunuz mezun" }[cevap.sinif];
   if (p.tekArac) {
     gerekce = "Tek bir araçla ilerlemeyi seçtin, paketi olduğu gibi bıraktık. " +
       bloklar[p.blok[0]].ad + " uygulanır ve sonucu ayrıntılı bir raporda " +
@@ -424,7 +421,8 @@ function sonucCiz() {
         (uzman ? "yazılır, ardından bir FUPİ danışmanıyla konuşulur." : "yazılı olarak verilir.");
     }
   } else {
-    gerekce += (veliMi() ? sinifMetniV : sinifMetni) + " ve " +
+    gerekce += (veliMi() ? sinifMetniV : sinifMetni) + ". ";
+    gerekce += (veliMi() ? "İşaretlediğiniz durum: " : "İşaretlediğin durum: ") +
       (veliMi() ? durumlar[cevap.durum].metinV.toLowerCase() : durumlar[cevap.durum].metin.toLowerCase()) + ". ";
     gerekce += "Bu nedenle pakette " + p.cekirdek.map(function (x) { return bloklar[x].ad; }).join(" ve ") + " mutlaka yer alıyor.";
   }
@@ -433,10 +431,6 @@ function sonucCiz() {
   p.notlar.forEach(function (n) {
     h += '<div class="neden" style="background:none;border:1px solid var(--cizgi);">' + n + '</div>';
   });
-
-  h += '<div class="ek"><input type="checkbox" id="ekKutu"' + (p.ek ? " checked" : "") + '>' +
-       '<label for="ekKutu"><b>Çalışma Değerleri ekle</b><br>' +
-       'Nasıl bir çalışma hayatı istediğini gösteren tamamlayıcı araç. Paketin üstüne eklenir.</label></div>';
 
   h += '<div class="satir">';
   h += '<button class="birincil" type="button">Paketi incele ve satın al</button>';
@@ -460,7 +454,7 @@ function sonucCiz() {
     h += '<div class="kart">';
     h += '<p class="paketadi" style="font-size:18px;">Kariyer Tasarımında Ailenin Rolü</p>';
     h += '<p class="kapsam">Ücretsiz webinar · 60 dakika · online</p>';
-    h += '<p style="margin:0 0 12px;font-size:14.5px;">9 ve 10. sınıf keşfetmek için geniş bir dönem. Sürecin nasıl işlediğini ve bu dönemde ailenin nerede durduğunu anlatan webinarımız dönem içinde belirli tarihlerde yapılıyor.</p>';
+    h += '<p style="margin:0 0 12px;font-size:14.5px;">Bu dönem keşfetmek için geniş bir zaman aralığı. Sürecin nasıl işlediğini ve bu dönemde ailenin nerede durduğunu anlatan webinarımız dönem içinde belirli tarihlerde yapılıyor.</p>';
     h += '<button class="ikincil" style="padding-left:0;" type="button">Webinar tarihleri hakkında beni bilgilendir</button>';
     h += '</div>';
   }
@@ -508,7 +502,7 @@ function alternatif(p, uzman) {
 }
 
 function bastanBasla() {
-  cevap = { kim: null, sinif: null, durum: null, merak: [], bicim: null, ek: false };
+  cevap = { kim: null, sinif: null, durum: null, merak: [], bicim: null };
   ciz1(); ciz2(); ciz3(); ciz4(); ciz5();
   goster(1);
 }

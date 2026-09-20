@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>FUPİ · İçgörü Paketi</title>
+<style>
+:root {
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  --mor:#26215C; --mor-orta:#3C3489; --mor-acik:#534AB7; --zemin:#EEEDFE;
+  --bg:#ffffff; --kart:#ffffff; --yazi:#202124; --gri:#5f6067; --cizgi:#DCDAEC; --turuncu:#F08010;
+}
+:root:not([data-theme="light"]) {
+  @media (prefers-color-scheme: dark) {
+    --bg:#17162a; --kart:#1F1D38; --yazi:#ECEBF5; --gri:#A9A7BC; --cizgi:#34315a;
+    --zemin:#262348; --mor:#BDB6F0; --mor-acik:#9A90E8;
+  }
+}
+:root[data-theme="dark"] {
+  --bg:#17162a; --kart:#1F1D38; --yazi:#ECEBF5; --gri:#A9A7BC; --cizgi:#34315a;
+  --zemin:#262348; --mor:#BDB6F0; --mor-acik:#9A90E8;
+}
+*,*::before,*::after { box-sizing:inherit; }
+html { scroll-padding-top:env(safe-area-inset-top,0px); }
+body { margin:0; background:var(--bg); color:var(--yazi);
+  font-family:"Segoe UI",Roboto,system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
+  font-size:16px; line-height:1.55; }
+.sarmal { max-width:640px; margin:0 auto; padding:24px 20px 64px; }
+.marka { font-size:13px; letter-spacing:.10em; color:var(--mor-acik); font-weight:600; }
+h1 { font-size:25px; line-height:1.25; margin:6px 0 4px; color:var(--mor); font-weight:600; }
+.alt { color:var(--gri); font-size:15px; margin:0 0 22px; }
+.cubuk { height:4px; background:var(--zemin); border-radius:2px; overflow:hidden; margin-bottom:26px; }
+.cubuk i { display:block; height:100%; background:var(--mor-acik); width:0; transition:width .3s ease; }
+.adim { display:none; }
+.adim.aktif { display:block; animation:gir .25s ease; }
+@keyframes gir { from{opacity:0;transform:translateY(6px);} to{opacity:1;transform:none;} }
+.soru { font-size:19px; font-weight:600; margin:0 0 6px; }
+.ipucu { font-size:14px; color:var(--gri); margin:0 0 16px; }
+.secenekler { display:flex; flex-direction:column; gap:10px; }
+button.sec { width:100%; text-align:left; font:inherit; color:var(--yazi); background:var(--kart);
+  border:1.5px solid var(--cizgi); border-radius:10px; padding:14px 16px; cursor:pointer;
+  transition:border-color .15s, background .15s; position:relative; }
+button.sec:hover { border-color:var(--mor-acik); }
+button.sec.secili { border-color:var(--mor-acik); background:var(--zemin); }
+button.sec .isim { display:block; font-weight:600; }
+button.sec .aciklama { display:block; font-size:13.5px; color:var(--gri); margin-top:2px; }
+.oneri { position:absolute; top:-9px; right:14px; background:var(--turuncu); color:#fff;
+  font-size:11px; font-weight:600; letter-spacing:.04em; padding:2px 9px; border-radius:99px; }
+.satir { display:flex; gap:10px; align-items:center; margin-top:22px; flex-wrap:wrap; }
+.birincil { font:inherit; font-weight:600; cursor:pointer; background:var(--mor-orta); color:#fff;
+  border:none; border-radius:8px; padding:12px 22px; }
+.ikincil { font:inherit; cursor:pointer; background:none; color:var(--gri); border:none;
+  padding:12px 6px; text-decoration:underline; }
+.rozet { display:inline-block; font-size:12px; letter-spacing:.06em; background:var(--zemin);
+  color:var(--mor-acik); padding:4px 10px; border-radius:99px; font-weight:600; margin-bottom:10px; }
+.kart { background:var(--kart); border:1.5px solid var(--cizgi); border-radius:12px; padding:20px; margin-bottom:16px; }
+.kart.ana { border-color:var(--mor-acik); border-width:2px; }
+.paketadi { font-size:22px; font-weight:600; color:var(--mor); margin:0 0 2px; }
+.fiyat { font-size:26px; font-weight:600; color:var(--yazi); margin:0 0 2px; }
+.kdv { font-size:13px; color:var(--gri); margin:0 0 14px; }
+ul.icerik { list-style:none; padding:0; margin:0 0 14px; }
+ul.icerik li { padding:8px 0 8px 22px; position:relative; font-size:15px; border-top:1px solid var(--cizgi); }
+ul.icerik li:first-child { border-top:none; }
+ul.icerik li::before { content:"›"; position:absolute; left:6px; color:var(--mor-acik); font-weight:700; }
+.neden { background:var(--zemin); border-radius:8px; padding:14px 16px; font-size:14.5px; margin-bottom:16px; }
+.neden b { color:var(--mor); }
+h3.bolum { font-size:14px; text-transform:uppercase; letter-spacing:.07em; color:var(--gri); margin:26px 0 10px; font-weight:600; }
+.serit { height:3px; background:linear-gradient(90deg,var(--turuncu),#4E9420,#C00D12,#3F6FA8,#8E1F66); border-radius:2px; margin:30px 0 18px; }
+.dipnot { font-size:13px; color:var(--gri); }
+.ustpaket .paketadi { font-size:18px; }
+.ustpaket .fiyat { font-size:20px; }
+</style>
+</head>
+<body>
+<div class="sarmal">
+
+<div class="marka">FUPİ KARİYER TASARIMI</div>
+<h1>İçgörü Paketi</h1>
+<p class="alt">Birkaç soruyla hangi aracın sana uygun olduğunu bulalım.</p>
+
+<div class="cubuk"><i id="ilerleme"></i></div>
+
+<section class="adim aktif" data-adim="1">
+  <p class="soru">Bu formu kim dolduruyor?</p>
+  <div class="secenekler" id="s1"></div>
+</section>
+
+<section class="adim" data-adim="2">
+  <p class="soru" id="soru2">Kaçıncı sınıftasın?</p>
+  <div class="secenekler" id="s2"></div>
+</section>
+
+<section class="adim" data-adim="3">
+  <p class="soru" id="soru3">Şu an:</p>
+  <p class="ipucu">Cümleyi tamamlayan seçeneği işaretle.</p>
+  <div class="secenekler" id="s3"></div>
+</section>
+
+<section class="adim" data-adim="4">
+  <p class="soru" id="soru4">Neyi öğrenmek istiyorsun?</p>
+  <p class="ipucu">Bu pakette tek bir konuya odaklanıyoruz.</p>
+  <div class="secenekler" id="s4"></div>
+</section>
+
+<section class="adim" data-adim="5">
+  <p class="soru">Nasıl ilerlemek istersin?</p>
+  <div class="secenekler" id="s5"></div>
+</section>
+
+<section class="adim" data-adim="6" id="sonucAlani"></section>
+
+</div>
+
+<script>
+var araclar = {
+  M: { ad:"Mesleki Yönelim",
+       sade:"İş hayatında hangi tür işlerin ilgini çektiği",
+       sadeV:"Çocuğunuzun iş hayatında hangi tür işlerin ilgisini çektiği",
+       rapor:"13 boyutta mesleki yönelim profili ve bu profile uygun alanlar" },
+  F: { ad:"Yetenek Taraması",
+       sade:"Bilişsel zeka potansiyelin",
+       sadeV:"Çocuğunuzun bilişsel zeka potansiyeli",
+       rapor:"Sözel, sayısal ve analitik akıl yürütme alanlarında profil" },
+  D: { ad:"Yetkinlik Profili",
+       sade:"İş hayatında karşılaşacağın durumları yorumlama kapasiten",
+       sadeV:"Çocuğunuzun iş hayatında karşılaşacağı durumları yorumlama kapasitesi",
+       rapor:"7 temel yetkinlikte güçlü ve gelişime açık yönler" },
+  S: { ad:"Davranış Analizi",
+       sade:"Bir görev üstlendiğinde iş hayatında beklenen davranışları ne düzeyde sergilediğin",
+       sadeV:"Çocuğunuzun bir görev üstlendiğinde iş hayatında beklenen davranışları ne düzeyde sergileyeceği",
+       rapor:"Senaryo bazlı uygulama üzerinden davranış kanıtlarıyla yetkinlik analizi" }
+};
+
+var durumlar = {
+  baslangic: { metin:"Hiçbir fikrim yok, nereden başlayacağımı bilmiyorum",
+               metinV:"Henüz hiçbir fikri yok, nereden başlayacağını bilmiyor", onerilen:"M" },
+  kararsiz:  { metin:"Birkaç alan arasında kaldım, seçemiyorum",
+               metinV:"Birkaç alan arasında kalmış, seçemiyor", onerilen:"M" },
+  emin_degil:{ metin:"Bir kararım var ama bana uygun mu emin değilim",
+               metinV:"Bir kararı var ama kendisine uygun mu emin değil", onerilen:"F" },
+  net:       { metin:"Kararım net, nasıl ilerleyeceğimi bilmiyorum",
+               metinV:"Kararı net, nasıl ilerleyeceğini bilmiyor", onerilen:"D" }
+};
+
+var paketler = {
+  icgoru:        { ad:"İçgörü", fiyat:"2.500 TL", gorusme:null },
+  icgoruGorusme: { ad:"İçgörü ve Uzman Görüşmesi", fiyat:"6.000 TL", gorusme:"30 dakika" },
+  icgoruIkili:   { ad:"İçgörü İkili ve Uzman Görüşmesi", fiyat:"8.000 TL", gorusme:"30 dakika" },
+  deneyim:       { ad:"Deneyim", fiyat:"10.000 TL", gorusme:"50 dakika" },
+  deneyimIcgoru: { ad:"Deneyim ve İçgörü", fiyat:"13.500 TL", gorusme:"50 dakika" }
+};
+
+var cevap = { kim:null, sinif:null, durum:null, arac:null, bicim:null };
+
+function el(id){ return document.getElementById(id); }
+function veliMi(){ return cevap.kim === "veli"; }
+function erkenSinif(){ return cevap.sinif === "9" || cevap.sinif === "10"; }
+function sadeMetin(k){ return veliMi() ? araclar[k].sadeV : araclar[k].sade; }
+
+function kutuYap(hedef, liste, secili, tiklama) {
+  hedef.innerHTML = "";
+  liste.forEach(function(o){
+    var b = document.createElement("button");
+    b.className = "sec" + (o.deger === secili ? " secili" : "");
+    b.type = "button";
+    b.innerHTML = (o.rozet ? '<span class="oneri">' + o.rozet + '</span>' : '') +
+      '<span class="isim">' + o.isim + '</span>' +
+      (o.aciklama ? '<span class="aciklama">' + o.aciklama + '</span>' : '');
+    b.onclick = function(){ tiklama(o.deger); };
+    hedef.appendChild(b);
+  });
+}
+
+function goster(n) {
+  document.querySelectorAll(".adim").forEach(function(s){
+    s.classList.toggle("aktif", +s.dataset.adim === n);
+  });
+  el("ilerleme").style.width = Math.min(100, (n-1)/5*100) + "%";
+  window.scrollTo({ top:0, behavior:"smooth" });
+}
+
+function ciz1() {
+  kutuYap(el("s1"), [{deger:"ogrenci",isim:"Öğrenci"},{deger:"veli",isim:"Veli"}], cevap.kim, function(d){
+    cevap.kim = d; cizHepsi(); goster(2);
+  });
+}
+function ciz2() {
+  el("soru2").textContent = veliMi() ? "Çocuğunuz kaçıncı sınıfta?" : "Kaçıncı sınıftasın?";
+  kutuYap(el("s2"), [
+    {deger:"9",isim:"9. sınıf"},{deger:"10",isim:"10. sınıf"},
+    {deger:"11",isim:"11. sınıf"},{deger:"12",isim:"12. sınıf"},{deger:"mezun",isim:"Mezun"}
+  ], cevap.sinif, function(d){ cevap.sinif = d; ciz2(); goster(3); });
+}
+function ciz3() {
+  el("soru3").textContent = veliMi() ? "Çocuğunuz şu an:" : "Şu an:";
+  var liste = Object.keys(durumlar).map(function(k){
+    return { deger:k, isim: veliMi() ? durumlar[k].metinV : durumlar[k].metin };
+  });
+  kutuYap(el("s3"), liste, cevap.durum, function(d){ cevap.durum = d; ciz3(); ciz4(); goster(4); });
+}
+function ciz4() {
+  el("soru4").textContent = veliMi() ? "Neyi öğrenmek istiyorsunuz?" : "Neyi öğrenmek istiyorsun?";
+  var onerilen = cevap.durum ? durumlar[cevap.durum].onerilen : null;
+  var liste = ["M","F","D","S"].map(function(k){
+    return { deger:k, isim:sadeMetin(k),
+             rozet: (k === onerilen) ? "CEVAPLARINA GÖRE" : null,
+             aciklama: (k === "S") ? "Bu seçenek uzman eşliğinde yürütülen bir uygulamadır" : null };
+  });
+  kutuYap(el("s4"), liste, cevap.arac, function(d){
+    cevap.arac = d; ciz4();
+    if (d === "S") { cevap.bicim = "uzman"; sonucCiz(); goster(6); }
+    else { ciz5(); goster(5); }
+  });
+}
+function ciz5() {
+  kutuYap(el("s5"), [
+    { deger:"yazili", isim:"Yazılı rapor yeterli",
+      aciklama:"Sonuçlar ve yorumu ayrıntılı bir raporda yazılı olarak verilir" },
+    { deger:"uzman", isim:"Raporu bir uzmanla konuşmak isterim",
+      aciklama:"Raporun yanında bir FUPİ danışmanıyla 30 dakikalık görüşme yapılır" }
+  ], cevap.bicim, function(d){ cevap.bicim = d; ciz5(); sonucCiz(); goster(6); });
+}
+
+function paketSec() {
+  if (cevap.arac === "S") return { p:paketler.deneyim, ust:paketler.deneyimIcgoru,
+    ustFark:"Senaryo bazlı uygulamanın yanına bir psikometrik araç eklenir, iki kaynak tek raporda birlikte okunur." };
+  if (cevap.bicim === "uzman") return { p:paketler.icgoruGorusme, ust:paketler.icgoruIkili,
+    ustFark:"İkinci bir ölçüm aracı eklenir, iki aracın kesiştiği yerler raporda tek bir okuma olarak yazılır." };
+  return { p:paketler.icgoru, ust:paketler.icgoruGorusme,
+    ustFark:"Raporun yanına bir FUPİ danışmanıyla 30 dakikalık görüşme eklenir." };
+}
+
+function sonucCiz() {
+  var s = paketSec();
+  var a = cevap.arac;
+  var h = '<div class="serit"></div>';
+  h += '<div class="rozet">' + (veliMi() ? "ÖNERİMİZ" : "SANA ÖNERİMİZ") + '</div>';
+
+  h += '<div class="kart ana">';
+  h += '<p class="paketadi">' + s.p.ad + '</p>';
+  h += '<p class="fiyat">' + s.p.fiyat + '</p>';
+  h += '<p class="kdv">KDV dahil</p>';
+  h += '<ul class="icerik">';
+  h += '<li><b>' + araclar[a].ad + '</b> · ' + sadeMetin(a) + '</li>';
+  h += '<li><b>Ayrıntılı rapor</b> · ' + araclar[a].rapor + '</li>';
+  if (s.p.gorusme) h += '<li><b>Uzman görüşmesi</b> · Bir FUPİ danışmanıyla ' + s.p.gorusme + '</li>';
+  h += '</ul>';
+
+  var sinifAd = { "9":"9. sınıf", "10":"10. sınıf", "11":"11. sınıf", "12":"12. sınıf", "mezun":"Mezun" }[cevap.sinif];
+  var g = (veliMi() ? "Çocuğunuz " + sinifAd.toLowerCase() + ". " : sinifAd + "tasın. ");
+  g = veliMi() ? "Çocuğunuz " + sinifAd + ". " : sinifAd + "tasın. ";
+  g += (veliMi() ? "İşaretlediğiniz durum: " : "İşaretlediğin durum: ") +
+       (veliMi() ? durumlar[cevap.durum].metinV.toLowerCase() : durumlar[cevap.durum].metin.toLowerCase()) + ". ";
+  g += "Öğrenmek istediğin konu için " + araclar[a].ad + " uygulanıyor.";
+  if (veliMi()) g = g.replace("Öğrenmek istediğin", "Öğrenmek istediğiniz");
+  h += '<div class="neden"><b>Neden bu paket?</b><br>' + g + '</div>';
+
+  if (erkenSinif() && a === "F") {
+    h += '<div class="neden" style="background:none;border:1px solid var(--cizgi);">' +
+      cevap.sinif + '. sınıfta yetenek sonuçları hızla değişebiliyor, bu yüzden raporda düzey yerine güçlü ve zayıf yönlerin karşılaştırmasına ağırlık veriyoruz.</div>';
+  }
+
+  h += '<div class="satir"><button class="birincil" type="button">Paketi satın al</button>' +
+       '<button class="ikincil" type="button">Önce konuşmak isterim</button></div>';
+  h += '</div>';
+
+  h += '<h3 class="bolum">Bir adım ötesi</h3>';
+  h += '<div class="kart ustpaket">';
+  h += '<p class="paketadi">' + s.ust.ad + '</p>';
+  h += '<p class="fiyat">' + s.ust.fiyat + '</p>';
+  h += '<p class="kdv">KDV dahil</p>';
+  h += '<p style="margin:0 0 12px;font-size:14.5px;">' + s.ustFark + '</p>';
+  h += '<button class="ikincil" style="padding-left:0;" type="button">Bu paketi incele</button>';
+  h += '</div>';
+
+  h += '<div class="satir"><button class="ikincil" style="padding-left:0;" type="button" onclick="bastanBasla()">Baştan başla</button></div>';
+  h += '<p class="dipnot">Emin olamadığın bir yer varsa bilgi@fupi.com.tr adresinden bize yazabilirsin.</p>';
+  el("sonucAlani").innerHTML = h;
+}
+
+function cizHepsi(){ ciz1(); ciz2(); ciz3(); ciz4(); ciz5(); }
+function bastanBasla(){
+  cevap = { kim:null, sinif:null, durum:null, arac:null, bicim:null };
+  cizHepsi(); goster(1);
+}
+cizHepsi(); goster(1);
+</script>
+</body>
+</html>

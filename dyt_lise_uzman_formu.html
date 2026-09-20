@@ -250,7 +250,12 @@ function ciz(){
       const hf = el.dataset.h, n = +el.dataset.n;
       if(!st.puan[v.kod]) st.puan[v.kod] = {};
       st.puan[v.kod][hf] = n;
-      kaydet(); ciz(); guncelle();
+      const kart = el.closest(".sec");
+      kart.querySelectorAll(".puan").forEach(function(d){ d.classList.remove("aktif"); });
+      el.classList.add("aktif");
+      kart.classList.add("secildi");
+      $("#formUyari").style.display = "none";
+      kaydet(); guncelle();
     };
   });
   $("#notAlan").oninput = function(){ st.not[v.kod] = this.value; kaydet(); };
@@ -259,8 +264,9 @@ function ciz(){
   $("#ileriBtn").textContent = st.i === VERI.length-1 ? "Değerlendirmeyi bitir" : "İleri";
   $("#formUyari").style.display = "none";
   guncelle();
-  window.scrollTo({top:0,behavior:"instant"});
 }
+
+function basaDon(){ window.scrollTo({top:0,behavior:"instant"}); }
 
 function guncelle(){
   const tam = VERI.filter(v => st.puan[v.kod] && Object.keys(st.puan[v.kod]).length === 4).length;
@@ -269,13 +275,13 @@ function guncelle(){
   $("#dolu").style.width = (100*tam/VERI.length) + "%";
 }
 
-$("#geriBtn").onclick = function(){ if(st.i>0){ st.i--; kaydet(); ciz(); } };
+$("#geriBtn").onclick = function(){ if(st.i>0){ st.i--; kaydet(); ciz(); basaDon(); } };
 
 $("#ileriBtn").onclick = function(){
   const v = VERI[st.i];
   const p = st.puan[v.kod] || {};
   if(Object.keys(p).length < 4){ $("#formUyari").style.display="block"; return; }
-  if(st.i < VERI.length-1){ st.i++; kaydet(); ciz(); }
+  if(st.i < VERI.length-1){ st.i++; kaydet(); ciz(); basaDon(); }
   else bitir();
 };
 
@@ -295,7 +301,7 @@ $("#geriDonBtn").onclick = function(){
   kaydet();
   $("#bitis").classList.add("gizli");
   $("#form").classList.remove("gizli");
-  ciz();
+  ciz(); basaDon();
 };
 
 $("#gonderBtn").onclick = function(){

@@ -69,7 +69,7 @@
 /* =====================================================================
    AYARLAR — yayına almadan önce yalnızca bu bölümü düzenlemen yeterli
    ===================================================================== */
-const WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbxQ8oa1FXDzZX27oKv7T-7HDL6fOFpgaPavGEbFGq8hMuUwmoaL8ciwWWDZub17TwykAg/exec";   // Apps Script /exec adresi. Boşken form test modunda çalışır, kayıt yapılmaz.
+const WEBHOOK_URL = "";   // Apps Script /exec adresi. Boşken form test modunda çalışır, kayıt yapılmaz.
 
 const YANIT_ZORUNLU = true;    // Soruları yanıtlamadan gezmek için geçici olarak false yapabilirsin.
 
@@ -182,6 +182,7 @@ const STEPS = [
    ===================================================================== */
 const form = document.getElementById("form");
 let cur = 0;
+let ilkAcilis = true;
 
 function fieldHTML(f){
   const req = f.required ? ' data-req="1"' : "";
@@ -227,7 +228,14 @@ function show(i){
   const n = STEPS.length, k = i==="done" ? n : i;
   document.getElementById("bar").style.width = (100*k/n)+"%";
   document.getElementById("stepno").textContent = i==="done" ? "Tamamlandı" : `Bölüm ${i+1} / ${n}`;
-  window.scrollTo({top:0, behavior:"smooth"});
+  if(!ilkAcilis){
+    // Form kendi içinde başa döner
+    window.scrollTo(0,0);
+    document.documentElement.scrollTop = 0; document.body.scrollTop = 0;
+    // Squarespace sayfasına da "formun başına kaydır" mesajı gönderilir
+    try{ window.parent.postMessage({fupiFormBasaDon:true}, "*"); }catch(e){}
+  }
+  ilkAcilis = false;
 }
 
 function valueOf(q){

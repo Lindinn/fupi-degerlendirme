@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mindfulness Programları Başvuru Formu</title>
+<style>
+  :root{
+    --bg:#f4f1ea; --card:#ffffff; --ink:#22302c; --muted:#5f6f6a;
+    --line:#dcd6c8; --accent:#2f6b5e; --accent-soft:#e3efeb; --warn:#a4452c;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font:16px/1.55 Georgia,"Times New Roman",serif}
+  .wrap{max-width:720px;margin:0 auto;padding:20px 16px 60px}
+  header h1{font-size:1.6rem;line-height:1.25;margin:18px 0 4px;font-weight:600}
+  header p{margin:0;color:var(--muted);font-family:system-ui,sans-serif;font-size:.92rem}
+  .bar{height:6px;background:var(--line);border-radius:3px;margin:18px 0 6px;overflow:hidden}
+  .bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .3s}
+  .stepno{font:600 .78rem system-ui,sans-serif;color:var(--muted);letter-spacing:.06em;text-transform:none}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:22px 20px;margin-top:12px}
+  h2{font-size:1.2rem;margin:0 0 6px}
+  .lead{color:var(--muted);margin:0 0 16px;font-family:system-ui,sans-serif;font-size:.93rem}
+  .lead strong{color:var(--ink);letter-spacing:.02em}
+  .q{padding:14px 0;border-top:1px solid var(--line)}
+  .q:first-of-type{border-top:0}
+  .q>label.t,.q>.t{display:block;font-weight:600;margin-bottom:8px}
+  .q .hint{font:400 .85rem system-ui,sans-serif;color:var(--muted);margin:-4px 0 8px}
+  .q.err>.t{color:var(--warn)}
+  .q.err>.t::after{content:"  · yanıt bekleniyor";font:400 .8rem system-ui,sans-serif}
+  input[type=text],input[type=email],input[type=tel],input[type=number],select,textarea{
+    width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:8px;
+    font:1rem system-ui,sans-serif;background:#fff;color:var(--ink)}
+  textarea{min-height:96px;resize:vertical}
+  input:focus,select:focus,textarea:focus{outline:2px solid var(--accent);outline-offset:1px}
+  .opts{display:flex;flex-wrap:wrap;gap:8px}
+  .opts label{flex:1 1 auto;display:flex;align-items:center;gap:8px;padding:10px 12px;
+    border:1px solid var(--line);border-radius:8px;cursor:pointer;
+    font:.93rem system-ui,sans-serif;background:#fff;min-width:120px}
+  .opts.col label{flex:1 1 100%}
+  .opts input{accent-color:var(--accent);width:18px;height:18px;flex:none}
+  .opts label:has(input:checked){background:var(--accent-soft);border-color:var(--accent)}
+  .info{background:var(--accent-soft);border-radius:8px;padding:14px 16px;margin:12px 0;
+    font:.93rem/1.5 system-ui,sans-serif}
+  .info h3{margin:0 0 4px;font:600 .95rem system-ui,sans-serif}
+  .info p{margin:0 0 8px}.info p:last-child{margin:0}
+  .nav{display:flex;justify-content:space-between;gap:12px;margin-top:18px}
+  button{font:600 1rem system-ui,sans-serif;padding:12px 22px;border-radius:8px;cursor:pointer;
+    border:1px solid var(--accent);background:var(--accent);color:#fff}
+  button.ghost{background:transparent;color:var(--accent)}
+  button:disabled{opacity:.5;cursor:default}
+  .msg{color:var(--warn);font:.9rem system-ui,sans-serif;margin-top:10px;min-height:1.2em}
+  .step{display:none}.step.on{display:block}
+  @media (max-width:520px){.opts label{flex:1 1 100%}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Mindfulness Programları Başvuru Formu</h1>
+    <p>Stres ve Stres Yönetimi dersi öğrencileri için · Aylin Dincer</p>
+    <div class="bar"><i id="bar"></i></div>
+    <div class="stepno" id="stepno"></div>
+  </header>
+  <form id="form" novalidate></form>
+</div>
+
+<script>
+/* =====================================================================
+   AYARLAR — yayına almadan önce yalnızca bu bölümü düzenlemen yeterli
+   ===================================================================== */
+const WEBHOOK_URL = "";   // Apps Script /exec adresi. Boşken form test modunda çalışır, kayıt yapılmaz.
+
+const YANIT_ZORUNLU = true;    // Soruları yanıtlamadan gezmek için geçici olarak false yapabilirsin.
+
+const PROGRAM_BILGISI = "Her iki program da 8 oturumdan oluşur. Oturumlar 2,5 saat sürer ve oturumlar arasında günde 30-45 dakikalık ev pratiği vardır. 21 Şubat 2027 Pazar günü 10:00-16:00 arasında iki grubun birlikte katılacağı bir mindful gün yapılacak.";
+
+const DESTEK_NOTU = "Kendini çok kötü hissettiğin bir anda beklemeden 112'yi arayabilir ya da üniversitenin psikolojik danışma birimine başvurabilirsin.";
+
+const SIKLIK_2HAFTA = ["Hiç","Birkaç gün","Çoğunlukla","Hemen hemen her gün"];        // 0-3
+const SIKLIK_GENEL  = ["Hiç","Nadiren","Bazen","Sık sık","Neredeyse her zaman"];                      // 0-4
+
+/* PHQ-8 ve YAB-7 (GAD-7) maddeleri: aşağıdaki ifadeler çalışma çevirisidir.
+   Yayından önce elindeki geçerlik-güvenirlik çalışması yapılmış Türkçe formların ifadeleriyle değiştir. */
+const PHQ8 = [
+  "Bir şeyler yapmaya karşı az ilgi duymak ya da yaptıklarından az zevk almak",
+  "Kendini çökkün, depresif ya da umutsuz hissetmek",
+  "Uykuya dalmakta ya da uykuyu sürdürmekte zorlanmak ya da çok fazla uyumak",
+  "Yorgun hissetmek ya da enerjinin az olması",
+  "İştahsızlık ya da aşırı yemek yemek",
+  "Kendini kötü hissetmek, başarısız olduğunu ya da kendini veya aileni hayal kırıklığına uğrattığını düşünmek",
+  "Okumak ya da bir şey izlemek gibi işlere odaklanmakta zorlanmak",
+  "Başkalarının fark edebileceği kadar yavaş hareket etmek ya da konuşmak ya da tam tersine, her zamankinden çok daha kıpır kıpır ya da huzursuz olmak"
+];
+const GAD7 = [
+  "Sinirli, kaygılı ya da gergin hissetmek",
+  "Endişelenmeyi durduramamak ya da kontrol edememek",
+  "Farklı konularda çok fazla endişelenmek",
+  "Rahatlamakta zorlanmak",
+  "Yerinde duramayacak kadar huzursuz olmak",
+  "Kolayca kızmak ya da sinirlenmek",
+  "Çok kötü bir şey olacakmış gibi korkmak"
+];
+/* Tarama maddeleri (valide ölçek değil). İstersen yerine kullandığın ölçeğin maddelerini koyabilirsin. */
+const RNT = [
+  "Aynı düşünceler zihnimde dönüp durur.",
+  "Olup bitmiş bir olayı ya da söylediğim bir sözü tekrar tekrar düşünürüm.",
+  "Kafama takılan bir düşünceyi bırakmakta zorlanırım."
+];
+const GK = [
+  "Geleceğimi düşündüğümde içimi bir huzursuzluk kaplar.",
+  "Mezuniyet sonrası hayatımla ilgili belirsizlik zihnimi meşgul eder.",
+  "Gelecekte işlerin kötü gideceğine dair düşünceler aklıma gelir."
+];
+
+/* =====================================================================
+   FORM YAPISI
+   ===================================================================== */
+const likert = (prefix, items, scale) => items.map((t,i)=>({id:prefix+(i+1), type:"radio", label:(i+1)+". "+t, options:scale, scored:true}));
+
+const STEPS = [
+ { title:"Hoş geldin",
+   html:`<p class="lead">Bu dönem iki ayrı mindfulness programı açılacak. Bu form başvurunu almak ve hangi programın sana daha uygun olduğunu belirlemek için hazırlandı. Doldurması yaklaşık 10 dakika sürer.</p>
+   <div class="info"><h3>MBCT · Mindfulness Temelli Bilişsel Terapi programı</h3><p>Tekrarlayan düşünce döngülerini, kaygıyı ve çökkün duygu durumunu fark etmeye ve bunlarla yeni bir ilişki kurmaya odaklanır. 10 kişilik bir grupla yürütülecek.</p>
+   <p><strong>Perşembe akşamları 20:00-22:30</strong> · 7, 14, 21, 28 Ocak · 4, 11, 25 Şubat · 4 Mart 2027</p>
+   <h3>MBSR · Mindfulness Temelli Stres Azaltma programı</h3><p>Gündelik stresle baş etmeye ve beden-zihin farkındalığını geliştirmeye odaklanır.</p>
+   <p><strong>Pazar sabahları 10:00-12:30</strong> · 3, 10, 17, 31 Ocak · 7, 28 Şubat · 7 Mart 2027</p>
+   <p>Bir oturum Pazar yerine <strong>13 Şubat Cumartesi</strong> günü aynı saatte yapılacak.</p>
+   <p>${PROGRAM_BILGISI}</p></div>
+   <div class="info"><h3>Katılım koşulları</h3>
+   <p>Program online yürütülür. Oturumlar boyunca kameranın açık olması zorunludur.</p>
+   <p>Katılım Belgesi almak için mindful güne katılman gerekir. Program boyunca en fazla bir oturum kaçırabilirsin.</p></div>
+   <div class="info"><h3>Bilmen gerekenler</h3>
+   <p>Katılım tamamen gönüllüdür. Başvurman ya da başvurmaman ders notunu hiçbir şekilde etkilemez.</p>
+   <p>Yanıtlarını yalnızca Aylin Dincer görür. Yanıtlar sadece program yerleştirmesi için kullanılır ve ders değerlendirmesinden ayrı tutulur.</p>
+   <p>Form ruh halinle ilgili sorular içerir. Bu sorular tanı koymak için değil, sana uygun programı belirlemek içindir. Gerekirse yerleştirme öncesinde seninle kısa bir bireysel görüşme yapılabilir.</p>
+   <p>Başvurunu ve verilerinin silinmesini istediğin zaman talep edebilirsin.</p></div>`,
+   fields:[
+    {id:"onam", type:"check", label:"Onay", options:["Yukarıdaki bilgileri okudum. Sağlık bilgisi içeren yanıtlarımın program yerleştirmesi amacıyla işlenmesine açık rıza veriyorum."], required:true}
+   ]},
+ { title:"Seni tanıyalım",
+   fields:[
+    {id:"ad", type:"text", label:"Ad Soyad", required:true},
+    {id:"eposta", type:"email", label:"E-posta", required:true},
+    {id:"telefon", type:"tel", label:"Telefon", required:true},
+    {id:"yas", type:"number", label:"Yaş", required:true, min:17, max:80},
+    {id:"sinif", type:"select", label:"Sınıf", options:["1","2","3","4","Diğer"], required:true}
+   ]},
+ { title:"Uygunluk ve deneyim",
+   fields:[
+    {id:"zaman", type:"radio", label:"Haftalık oturum için hangi zaman dilimi sana daha uygun?", options:["Perşembe akşam 20:00-22:30","Pazar 10:00-12:30","İkisi de uygun","Hiçbiri uygun değil"], required:true},
+    {id:"devam", type:"radio", label:"Programın 8 oturumuna ve 21 Şubat'taki mindful güne (10:00-16:00) katılabilir misin?", hint:"Tarihler formun ilk sayfasında yer alıyor.", options:["Evet, hepsine","En fazla bir oturumu kaçırabilirim","Emin değilim"], required:true},
+    {id:"pratik", type:"radio", label:"Günde 30-45 dakikalık ev pratiğine zaman ayırabilir misin?", options:["Evet","Çoğu gün","Zorlanırım"], required:true},
+    {id:"deneyim", type:"radio", label:"Daha önce mindfulness ya da meditasyon deneyimin oldu mu?", options:["Hiç olmadı","Birkaç kez denedim","Düzenli pratik yaptım","8 haftalık bir programa katıldım"], required:true},
+    {id:"alan", type:"check", label:"Şu sıralar seni en çok zorlayan alanlar hangileri?", hint:"En fazla üç tanesini işaretle.", max:3, options:["Zihnimin sürekli meşgul olması","Gelecekle ilgili kaygı","Keyifsizlik ve isteksizlik","Sınav ve ders stresi","Uyku","Dikkatimi toplamak","İlişkiler","Bedensel gerginlik"], required:true},
+    {id:"beklenti", type:"textarea", label:"Bu programa neden katılmak istiyorsun?", hint:"Birkaç cümle yeterli.", required:true},
+    {id:"beklenti2", type:"textarea", label:"Bu programdan beklentin nedir?", hint:"Birkaç cümle yeterli.", required:true}
+   ]},
+ { title:"Son iki hafta · 1",
+   lead:"<strong>SON 2 HAFTA</strong> içinde aşağıdaki durumlar seni ne sıklıkta rahatsız etti?",
+   fields: likert("phq", PHQ8, SIKLIK_2HAFTA).map(f=>({...f, required:true})) },
+ { title:"Son iki hafta · 2",
+   lead:"<strong>SON 2 HAFTA</strong> içinde aşağıdaki durumlar seni ne sıklıkta rahatsız etti?",
+   fields: likert("gad", GAD7, SIKLIK_2HAFTA).map(f=>({...f, required:true})) },
+ { title:"Düşünceler ve gelecek",
+   lead:"<strong>SON BİR AYINI</strong> düşünerek her ifadenin senin için ne sıklıkta geçerli olduğunu işaretle.",
+   fields: [...likert("rnt", RNT, SIKLIK_GENEL), ...likert("gk", GK, SIKLIK_GENEL).map((f,i)=>({...f,label:(i+4)+". "+GK[i]}))].map(f=>({...f, required:true})) },
+ { title:"Sağlık ve destek",
+   lead:"Bu bölüm programın sana iyi gelecek zamanda ve biçimde sunulması için soruluyor. Yanıtların başvurunun reddedilmesine yol açmaz, gerekirse seninle kısa bir görüşme planlanır.",
+   fields:[
+    {id:"donem", type:"radio", label:"Hayatında, EN AZ İKİ HAFTA süren ve günlük işlerini belirgin biçimde zorlaştıran çökkün bir dönem yaşadın mı?", options:["Hiç yaşamadım","Bir kez","İki ya da daha fazla","Emin değilim"], required:true},
+    {id:"destek", type:"radio", label:"Şu anda bir psikolog ya da psikiyatristten destek alıyor musun?", options:["Evet","Hayır"], required:true},
+    {id:"tani", type:"radio", label:"Bir ruh sağlığı uzmanının koyduğu güncel bir tanın var mı?", options:["Evet","Hayır","Belirtmek istemiyorum"], required:true},
+    {id:"kayip", type:"radio", label:"SON ALTI AYDA seni derinden etkileyen bir kayıp ya da sarsıcı bir olay yaşadın mı?", options:["Evet","Hayır"], required:true},
+    {id:"kriz", type:"radio", label:"Şu sıralar kendini yoğun bir kriz döneminde hissediyor musun?", options:["Evet","Hayır","Emin değilim"], required:true},
+    {id:"not", type:"textarea", label:"Bilmemi istediğin başka bir şey var mı?", hint:"İsteğe bağlı."}
+   ]}
+];
+
+/* =====================================================================
+   ÇALIŞMA MANTIĞI
+   ===================================================================== */
+const form = document.getElementById("form");
+let cur = 0;
+
+function fieldHTML(f){
+  const req = f.required ? ' data-req="1"' : "";
+  let inner = "";
+  if(f.type==="radio" || f.type==="check"){
+    const t = f.type==="radio" ? "radio" : "checkbox";
+    const col = (f.type==="check" || f.options.some(o=>o.length>22)) ? " col" : "";
+    inner = `<div class="opts${col}">` + f.options.map((o,i)=>
+      `<label><input type="${t}" name="${f.id}" value="${f.scored? i : o}" data-text="${o}"><span>${o}</span></label>`).join("") + `</div>`;
+  } else if(f.type==="select"){
+    inner = `<select name="${f.id}"><option value="">Seç</option>${f.options.map(o=>`<option>${o}</option>`).join("")}</select>`;
+  } else if(f.type==="textarea"){
+    inner = `<textarea name="${f.id}"></textarea>`;
+  } else {
+    inner = `<input type="${f.type}" name="${f.id}"${f.min?` min="${f.min}"`:""}${f.max?` max="${f.max}"`:""}>`;
+  }
+  return `<div class="q" data-id="${f.id}" data-type="${f.type}"${req}${f.max&&f.type==="check"?` data-max="${f.max}"`:""}>
+    <div class="t">${f.label}</div>${f.hint?`<div class="hint">${f.hint}</div>`:""}${inner}</div>`;
+}
+
+function build(){
+  form.innerHTML = STEPS.map((s,i)=>`
+    <section class="step card" data-step="${i}">
+      <h2>${s.title}</h2>
+      ${s.lead?`<p class="lead">${s.lead}</p>`:""}${s.html||""}
+      ${s.fields.map(fieldHTML).join("")}
+      <div class="msg" aria-live="polite"></div>
+      <div class="nav">
+        ${i>0?`<button type="button" class="ghost" data-act="back">Geri</button>`:`<span></span>`}
+        <button type="button" data-act="${i<STEPS.length-1?"next":"send"}">${i<STEPS.length-1?"Devam":"Başvuruyu gönder"}</button>
+      </div>
+    </section>`).join("") +
+    `<section class="step card" data-step="done"><h2>Başvurun alındı</h2>
+      <p>Teşekkürler. Başvurular değerlendirildikten sonra sana e-posta ile dönüş yapılacak ve hangi programa yerleştirildiğin bildirilecek.</p>
+      <div class="info"><p>${DESTEK_NOTU}</p></div>
+      <p class="lead" id="demo"></p></section>`;
+  show(0);
+}
+
+function show(i){
+  cur = i;
+  document.querySelectorAll(".step").forEach(s=>s.classList.toggle("on", s.dataset.step==String(i)));
+  const n = STEPS.length, k = i==="done" ? n : i;
+  document.getElementById("bar").style.width = (100*k/n)+"%";
+  document.getElementById("stepno").textContent = i==="done" ? "Tamamlandı" : `Bölüm ${i+1} / ${n}`;
+  window.scrollTo({top:0, behavior:"smooth"});
+}
+
+function valueOf(q){
+  const id=q.dataset.id, type=q.dataset.type;
+  if(type==="radio"){ const c=q.querySelector("input:checked"); return c? c.value : ""; }
+  if(type==="check"){ return [...q.querySelectorAll("input:checked")].map(c=>c.value).join(" | "); }
+  return q.querySelector("[name]").value.trim();
+}
+
+function validate(stepEl){
+  if(!YANIT_ZORUNLU) return true;
+  let ok = true, msg = "";
+  stepEl.querySelectorAll(".q").forEach(q=>{
+    const v = valueOf(q); let bad = false;
+    if(q.dataset.req && !v) bad = true;
+    if(q.dataset.id==="eposta" && v && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v)){ bad = true; msg = "E-posta adresini kontrol et."; }
+    if(q.dataset.max && q.querySelectorAll("input:checked").length > +q.dataset.max){ bad = true; msg = `En fazla ${q.dataset.max} seçenek işaretleyebilirsin.`; }
+    q.classList.toggle("err", bad);
+    if(bad) ok = false;
+  });
+  stepEl.querySelector(".msg").textContent = ok ? "" : (msg || "Lütfen işaretli soruları yanıtla.");
+  if(!ok){ const f = stepEl.querySelector(".q.err"); if(f) f.scrollIntoView({behavior:"smooth", block:"center"}); }
+  return ok;
+}
+
+function collect(){
+  const data = {};
+  document.querySelectorAll(".q").forEach(q=>{ data[q.dataset.id] = valueOf(q); });
+  return data;
+}
+
+form.addEventListener("click", async e=>{
+  const b = e.target.closest("button[data-act]"); if(!b) return;
+  const stepEl = b.closest(".step");
+  if(b.dataset.act==="back") return show(cur-1);
+  if(!validate(stepEl)) return;
+  if(b.dataset.act==="next") return show(cur+1);
+
+  const data = collect();
+  if(!WEBHOOK_URL){
+    show("done");
+    document.getElementById("demo").textContent = "Test modu: WEBHOOK_URL boş olduğu için bu yanıt kaydedilmedi.";
+    console.log(data);
+    return;
+  }
+  b.disabled = true; b.textContent = "Gönderiliyor";
+  try{
+    await fetch(WEBHOOK_URL, {method:"POST", mode:"no-cors",
+      headers:{"Content-Type":"text/plain;charset=utf-8"}, body:JSON.stringify(data)});
+    show("done");
+  }catch(err){
+    b.disabled = false; b.textContent = "Başvuruyu gönder";
+    stepEl.querySelector(".msg").textContent = "Gönderim sırasında bir sorun oluştu. Bağlantını kontrol edip tekrar dene.";
+  }
+});
+
+build();
+</script>
+</body>
+</html>
